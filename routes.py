@@ -4,5 +4,6 @@
 
 def get_routes():
     routes = [
+        (r'/first', 'controller.first.FirstHandler'),
     ]
     return routes

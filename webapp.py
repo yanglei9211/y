@@ -15,7 +15,7 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 import settings
 from util.template import JinjaLoader
 from util.common import install_tornado_shutdown_handler
-from route import get_routes
+from routes import get_routes
 
 
 class YWeb(object):

@@ -36,7 +36,6 @@ def install_tornado_shutdown_handler(ioloop, server, logger=None):
             else:
                 ioloop.stop()
                 logger.info("Server is shutdown")
-
         stop_loop()
 
     signal.signal(signal.SIGTERM, _sig_handler)
