@@ -39,7 +39,7 @@ class YWeb(object):
             'debug': options.debug,
             'cookie_secret': options.cookie_secret,
             'xsrf_cookies': True,
-            'statis_path': u'/static/'
+            'static_path': os.path.join(os.path.dirname(__file__), "static")
         }
 
         the_settings.update(more_settings)

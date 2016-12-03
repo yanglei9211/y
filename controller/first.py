@@ -6,7 +6,10 @@ from util.base_handler import BaseHandler
 
 class FirstHandler(BaseHandler):
     def get(self):
-        self.write({'msg': 'ok'})
+        self.render(
+            'first.html',
+            name="123"
+        )
 
     def post(self):
         a = self.get_argument('a')

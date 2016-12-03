@@ -93,8 +93,9 @@ class BaseHandler(RequestHandler):
 
     def render(self, template, **kwargs):
         # todo render common date
+        print kwargs
         return super(BaseHandler, self).render(
-            template, subject=self.subject, site_root=self.subject.site_root, **kwargs)
+            template, **kwargs)
 
     def dumps(self, obj):
         obj = self.sorted(obj)

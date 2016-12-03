@@ -72,8 +72,8 @@ class JinjaLoader(object):
         self.env.globals.update(additional_globals)
         self.env.filters['ts_format'] = _ts_format
 
-    def load(self, name, parent_path=None):
-        pass
+    def load(self, name):
+        return JinjaTemplate(self.env.get_template(name))
 
     def reset(self):
         self.env.cache.clear()
