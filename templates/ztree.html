@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block css %}
+    <link href="{{ static_url('ztree/css/demo.css')}}" rel="stylesheet">
+    <link href="{{ static_url('ztree/css/zTreeStyle/zTreeStyle.css') }}" rel="stylesheet">
+    <link href="{{ static_url('ztree/css/right_menu.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<div>
+    <ul id="treeDemo" class="ztree"></ul>
+    <ul id="rMenu">
+        <li id="r_add">增加节点</li>
+        <li id="r_update">修改节点</li>
+        <li id="r_del">删除节点</li>
+    </ul>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{{ static_url('ztree/js/jquery.ztree.core.min.js') }}"></script>
+<script>
+
+var zTreeObj;
+var setting = {
+    view: {
+        dblClickExpand: false
+    },
+    callback: {
+        onRightClick: OnRightClick
+    }
+};
+
+var zNodes = [
+    {id:1, name:"test1", open:true, children:[
+        {id:11, name:'test1_1'}, {id:12, name:'test1_2'}]},
+    {id:2, name:"test2", open:true, children:[
+        {id:21, name:'test2_1'}, {id:22, name:'test2_2'}]}
+];
+var zTree, rMenu;
+$(document).ready(function () {
+    $.fn.zTree.init($('#treeDemo'), setting, zNodes);
+    zTree = $.fn.zTree.getZTreeObj("treeDemo");
+    rMenu = $('#rMenu');
+});
+
+function OnRightClick(event, treeId, treeNode){
+    if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parent("a").length == 0){
+        zTree.cancelSelectedNode();
+        showRMenu("root", event.clientX, event.clientY);
+    }else {
+        zTree.selectNode(treeNode);
+        showRMenu("node", event.clientX, event.clientY);
+    }
+}
+
+function showRMenu(type, x, y){
+    $('#rMenu ul').show();
+    if (type == 'root'){
+        $('#r_add').hide();
+        $('#r_update').hide();
+        $('#r_del').hide();
+    }else {
+        $('#r_add').show();
+        $('#r_update').show();
+        $('#r_del').show();
+    }
+    rMenu.css({'top': y+'px', 'left':x+'px', 'visibility':'visible'});
+    $('body').bind('mousedown', onBodyMouseDown);
+}
+
+function hideRMent(){
+    if (rMenu) rMenu.css({'visibility': 'hidden'});
+    $('body').unbind('mousedown', onBodyMouseDown);
+}
+
+function onBodyMouseDown(event){
+    if (!(event.target.id == "rMenu" || $(event.target).parents('#rMenu').length>0)){
+        rMenu.css({'visibility': 'hidden'});
+    }
+}
+
+$('#r_add').click(function () {
+    hideRMent();
+    alert('add');
+});
+
+$('#r_update').click(function () {
+    hideRMent();
+    alert('update');
+});
+
+$('#r_del').click(function () {
+    hideRMent();
+    alert('del');
+})
+</script>
+{% endblock %}
