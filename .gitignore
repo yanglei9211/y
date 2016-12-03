@@ -2,3 +2,4 @@
 *.pyproj
 /server.conf
 /output
+.idea/
