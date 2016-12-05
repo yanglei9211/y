@@ -3,3 +3,5 @@
 /server.conf
 /output
 .idea/
+/static/.DS_Store
+.DS_Store

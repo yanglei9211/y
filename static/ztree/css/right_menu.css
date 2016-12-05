@@ -1,0 +1,29 @@
+body {
+    background-color: white;
+    margin:0; padding:0;
+    text-align: center;
+}
+
+div, ul , p, table, th, td {
+    list-style:none;
+    margin:0; padding:0;
+    color:#333; font-size:13px;
+    font-family:"Segoe UI";
+}
+ul#rMenu {
+    position: absolute;
+	width: 70px;
+	z-index: 99999;
+	border: solid 1px #CCC;
+	background: #EEE;
+	padding: 0px;
+	margin: 0px;
+    visibility: hidden;
+}
+ul#rMenu li {
+    margin:1px 0;
+    padding:0 5px;
+    cursor: pointer;
+    list-style: none outside none;
+    background-color:#EEE;
+}
