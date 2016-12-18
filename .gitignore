@@ -5,3 +5,5 @@
 .idea/
 /static/.DS_Store
 .DS_Store
+.idea/*.*
+/util/*.pyc
