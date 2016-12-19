@@ -9,7 +9,7 @@ def show_time_cost(tar_func):
     def wrap_func(*args, **kwargs):
         st = time.time()
         res = tar_func(*args, **kwargs)
-        print "%s cost %f ms" % (tar_func.__name__, time.time() - st)
+        print "function %s cost %f ms" % (tar_func.__name__, time.time() - st)
         return res
     return wrap_func
 
