@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding=utf-8
 
-
+import sys
 import os
 import datetime
 import logging
@@ -15,7 +15,13 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 import settings
 from util.template import JinjaLoader
 from util.common import install_tornado_shutdown_handler
+from util.request_handlers import SmartStaticFileHandler, MultiFileFindler
 from routes import get_routes
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+del sys.setdefaultencoding
+del sys
 
 
 class YWeb(object):
@@ -31,15 +37,24 @@ class YWeb(object):
             parse_config_file(conf_file_path, final=False)
         parse_command_line(final=True)
 
+        """
         loader = ChoiceLoader([
             FileSystemLoader(os.path.join(self_dir_path, 'templates')),
         ])
+        """
+        loader = JinjaLoader(loader=ChoiceLoader([
+            FileSystemLoader(os.path.join(self_dir_path, 'templates')),
+        ]), debug=options.debug)
+        SmartStaticFileHandler.file_finder = MultiFileFindler(
+            [],
+            os.path.join(self_dir_path, 'static'))
         the_settings = {
-            'template_loader': JinjaLoader(loader=loader),
+            'template_loader': loader,
             'debug': options.debug,
             'cookie_secret': options.cookie_secret,
             'xsrf_cookies': True,
-            'static_path': os.path.join(os.path.dirname(__file__), "static")
+            'static_path': u'/static/',
+            'static_handler_class': SmartStaticFileHandler,
         }
 
         the_settings.update(more_settings)

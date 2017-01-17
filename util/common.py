@@ -5,6 +5,7 @@ import re
 import time
 import signal
 import httpagentparser
+PAGE_SIZE_DEFAULT = 20
 
 from tornado.escape import url_escape
 
@@ -40,3 +41,31 @@ def install_tornado_shutdown_handler(ioloop, server, logger=None):
 
     signal.signal(signal.SIGTERM, _sig_handler)
     signal.signal(signal.SIGINT, _sig_handler)
+
+
+class Pager:
+    def __init__(self, handler):
+        self.page_count = 0
+        self.page = handler.get_argument('page_num', 0, type_=int)
+        self.page_size = handler.get_argument('page_size', PAGE_SIZE_DEFAULT, type_=int)
+        self.page_size = min(100, max(1, self.page_size))
+
+    def paginate(self, cursor):
+        cursor.limit(self.page_size)
+        if self.page > 0:
+            cursor.skip(self.page_size * self.page)
+        self.page_count = self.count_page_num(cursor.count())
+        return cursor
+
+    def paged_response(self):
+        return {
+            'page': self.page,
+            'pagecount': self.page_count,
+            'pagesize': self.page_size
+        }
+
+    def count_page_num(self, total_count):
+        res = total_count / self.page_size
+        if total_count % self.page_size:
+            res += 1
+        return res
