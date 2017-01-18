@@ -74,3 +74,11 @@ class UserHandler(BaseHandler):
             {'_id': uid},
             {'$set': up_set}
         )
+
+
+class LoginHandler(BaseHandler):
+    allow_anony = True
+
+    def get(self):
+        if self.current_user is not None:
+            self.redirect(self.get_next_url())
