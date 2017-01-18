@@ -4,6 +4,7 @@ import logging
 
 from tornado.web import RequestHandler
 from tornado.options import options
+from tornado.escape import json_decode
 
 from bson.json_util import dumps, loads
 from util.escape import json_encode, safe_typed_from_str
@@ -18,6 +19,7 @@ class BaseHandler(RequestHandler):
     def prepare(self):
         uri = self.request.uri
         path = self.request.path
+        print path
         user = self.current_user
         logging.info('user:%s is accessing %s' % (user, uri))
 
@@ -37,8 +39,21 @@ class BaseHandler(RequestHandler):
     def get_current_user(self):
         if options.debug:
             return self.get_debug_user()
+
+        user_json = self.get_secure_cookie('user')
+        if user_json:
+            user = json_decode(user_json)
+            user_db = self.userdb.user.find_one({'username': user['username']})
+            if user_db and user_db['valid'] and user['login_sn'] == self.get_cookie("login_sn"):
+                user['name'] = user_db['name']
+                user['role'] = user_db['role']
+                return user
+            else:
+                self.clear_cookie('user', domain=self.get_main_domain())
+                return None
         else:
-            pass
+            return None
+
 
     @property
     def m(self):
