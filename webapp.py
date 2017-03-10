@@ -11,6 +11,7 @@ from tornado.web import Application
 from tornado.ioloop import IOLoop
 from tornado.options import options, parse_command_line, parse_config_file
 from jinja2 import ChoiceLoader, FileSystemLoader
+from pymongo import MongoClient
 
 import settings
 from util.template import JinjaLoader
@@ -52,7 +53,8 @@ class YWeb(object):
             'template_loader': loader,
             'debug': options.debug,
             'cookie_secret': options.cookie_secret,
-            'xsrf_cookies': True,
+            'xsrf_cookies': False,
+            'db': self.setup_db_client(),
             'static_path': u'/static/',
             'static_handler_class': SmartStaticFileHandler,
         }
@@ -66,7 +68,11 @@ class YWeb(object):
         })
 
     def setup_db_client(self):
-        pass
+        client = MongoClient(options.mongodb_host, options.mongodb_port)
+        db = client[options.mongodb_name]
+        logging.info('Connected to db: %s --- %s:%d' %
+                     (options.mongodb_name, options.mongodb_host, options.mongodb_port))
+        return db
 
     def setup_user_db(self):
         pass

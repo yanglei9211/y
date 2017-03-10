@@ -2,7 +2,8 @@
 # encoding: utf-8
 
 from util.base_handler import BaseHandler
-from debugtools.debug_func import show_time_cost
+from debug_func import show_time_cost
+
 
 class FirstHandler(BaseHandler):
     @show_time_cost
@@ -13,6 +14,6 @@ class FirstHandler(BaseHandler):
         )
 
     def post(self):
-        a = self.get_argument('a')
-        b = self.get_argument('b')
-        self.write({'sum': a+b})
+        dt = self.get_argument('data')
+        print dt
+        self.write({'res': dt})

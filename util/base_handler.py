@@ -19,7 +19,6 @@ class BaseHandler(RequestHandler):
     def prepare(self):
         uri = self.request.uri
         path = self.request.path
-        print path
         user = self.current_user
         logging.info('user:%s is accessing %s' % (user, uri))
 
@@ -54,7 +53,6 @@ class BaseHandler(RequestHandler):
         else:
             return None
 
-
     @property
     def m(self):
         return self.current_user['username'] if self.current_user else None
@@ -62,6 +60,10 @@ class BaseHandler(RequestHandler):
     @property
     def is_manager(self):
         return self.current_user and self.current_user['role'] == USER_ROLE_MANAGER
+
+    @property
+    def db(self):
+        return self.application.db
 
     def get_argument(self, name, *args, **kwargs):
         type_ = kwargs.pop("type_" ,None)
@@ -108,7 +110,6 @@ class BaseHandler(RequestHandler):
 
     def render(self, template, **kwargs):
         # todo render common date
-        print kwargs
         return super(BaseHandler, self).render(
             template, **kwargs)
 

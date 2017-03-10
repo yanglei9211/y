@@ -4,13 +4,13 @@
 import re
 import time
 import signal
-import httpagentparser
-PAGE_SIZE_DEFAULT = 20
 
+import httpagentparser
 from tornado.escape import url_escape
 
 
 MAX_WAIT_SECONDS_BEFORE_SHUTDOWN = 1
+PAGE_SIZE_DEFAULT = 20
 
 
 def install_tornado_shutdown_handler(ioloop, server, logger=None):
@@ -46,7 +46,7 @@ def install_tornado_shutdown_handler(ioloop, server, logger=None):
 class Pager:
     def __init__(self, handler):
         self.page_count = 0
-        self.page = handler.get_argument('page_num', 0, type_=int)
+        self.page = handler.get_argument('page_idx', 0, type_=int)
         self.page_size = handler.get_argument('page_size', PAGE_SIZE_DEFAULT, type_=int)
         self.page_size = min(100, max(1, self.page_size))
 

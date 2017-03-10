@@ -31,7 +31,6 @@ class Scaffold(object):
         parse_command_line(final=True)
         self.db = self.setup_db()
 
-
     def setup_db(self):
         logging.info('Running in %s mode' % ('debug' if options.debug else 'production'))
         db_name = options.mongodb_name
@@ -47,7 +46,6 @@ class Scaffold(object):
 
     def run(self, *args, **kwargs):
         return self.main(*args, **kwargs)
-
 
     def main(self, *args, **kwargs):
         # overwrite
