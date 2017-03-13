@@ -63,7 +63,11 @@ class BaseHandler(RequestHandler):
 
     @property
     def db(self):
-        return self.application.db
+        return self.application.settings.get('db')
+
+    @property
+    def bucket(self):
+        return self.application.settings.get('oss_bucket')
 
     def get_argument(self, name, *args, **kwargs):
         type_ = kwargs.pop("type_" ,None)

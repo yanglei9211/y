@@ -6,6 +6,7 @@ import os
 import datetime
 import logging
 
+import oss2
 from tornado.httpserver import HTTPServer
 from tornado.web import Application
 from tornado.ioloop import IOLoop
@@ -55,6 +56,7 @@ class YWeb(object):
             'cookie_secret': options.cookie_secret,
             'xsrf_cookies': False,
             'db': self.setup_db_client(),
+            'oss_bucket': self.setup_oss_bucket(),
             'static_path': u'/static/',
             'static_handler_class': SmartStaticFileHandler,
         }
@@ -78,7 +80,10 @@ class YWeb(object):
         pass
 
     def setup_oss_bucket(self):
-        pass
+        auth = oss2.Auth(options.oss_access_id, options.oss_access_key)
+        bucket = oss2.Bucket(auth, options.oss_endpoint, options.oss_name)
+        return bucket
+
 
     def run(self):
         logging.info('Running at port %s in %s mode'

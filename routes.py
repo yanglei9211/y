@@ -8,5 +8,6 @@ def get_routes():
         (r'/tree', 'controller.ztree.TreeHandler'),
         (r'/test', 'controller.test.TestHandler'),
         (r'/test2', 'controller.test.TestNormalHandler'),
+        (r'/test/fileinput', 'controller.test.TestFileHandler'),
     ]
     return routes

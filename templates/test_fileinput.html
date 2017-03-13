@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block css %}
+    <link href="{{ static_url('css/fileinput/fileinput.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <h1>test file input</h1>
+    <div class="text-center">
+    <div class="login-form" style=" margin: 0 auto;">
+        <div class="form-group">
+            <input id="file_input" name="input_file" type="file" class="file-loading"
+                   multiple data-show-upload="false" data-show-caption="true">
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{{ static_url("js/fileinput/plugins/canvas-to-blob.min.js") }}" type="text/javascript"></script>
+    <script src="{{ static_url("js/fileinput/fileinput.js") }}" type="text/javascript"></script>
+    <script src="{{ static_url("js/fileinput/fileinput_locale_zh.js") }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var url = window.location.href;
+            $("#file_input").fileinput({
+                'uploadUrl': url,
+                'language': "zh",
+                'uploadExtraData': function () {return {'action': "upload_file"}},
+                //'allowedFileExtensions': ["doc", "docx", "txt", "pdf", "zip"],
+                'allowedFileExtensions': ["zip"],
+                mainClass: "input-group-lg"
+            });
+        });
+    </script>
+{% endblock %}
