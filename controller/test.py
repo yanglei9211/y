@@ -20,7 +20,6 @@ class TestHandler(BaseHandler):
         b = safe_typed_from_str(self.get_argument('b'), int)
         res = yield asy_add(self, a, b)
         self.write({'ans': res})
-        self.finish()
 
 
 class TestNormalHandler(BaseHandler):
@@ -69,7 +68,6 @@ class TestMotorHandler(BaseHandler):
     def get(self):
         res = yield test_motor_find(self)
         self.write({'data': res})
-        self.finish()
 
 
 class TestMongoHandler(BaseHandler):
