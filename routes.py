@@ -10,5 +10,7 @@ def get_routes():
         (r'/test2', 'controller.test.TestNormalHandler'),
         (r'/test3', 'controller.test.TestImHandler'),
         (r'/test/fileinput', 'controller.test.TestFileHandler'),
+        (r'/test/motor/find', 'controller.test.TestMotorHandler'),
+        (r'/test/mongo/find', 'controller.test.TestMongoHandler'),
     ]
     return routes
