@@ -8,6 +8,7 @@ from tornado.web import HTTPError
 from bl.test import asy_add, add, im_add
 from bl.test import unzip_img_files
 from bl.test import test_motor_find, test_mongo_find
+from bl.test import get_simhash, asy_get_simhash
 from util.escape import safe_typed_from_str
 
 from debug_func import show_pretty_dict
@@ -74,3 +75,20 @@ class TestMongoHandler(BaseHandler):
     def get(self):
         res = test_mongo_find(self)
         self.write({'data': res})
+
+
+class TestAsyHttpClient(BaseHandler):
+    @coroutine
+    def get(self, t_id):
+        ques_data = self.db.text_info.find_one({'t_id': str(t_id)})['data']
+        ques_data = "aksjhdfjkladshfkjladshfkjladshfkadjlshdfkladshfkladjeiojkrf"
+        res = yield asy_get_simhash(ques_data)
+        self.write({'s': res.body})
+
+
+class TestHttpClient(BaseHandler):
+    def get(self, t_id):
+        ques_data = self.db.text_info.find_one({'t_id': t_id})['data']
+        ques_data = "aksjhdfjkladshfkjladshfkjladshfkadjlshdfkladshfkladjeiojkrf"
+        res = get_simhash(ques_data)
+        self.write({'s': res.text})
