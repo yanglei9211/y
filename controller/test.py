@@ -1,18 +1,21 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import sys
 
 from util.base_handler import BaseHandler
 from tornado.gen import coroutine
 from tornado.web import HTTPError
 
 from bl.test import asy_add, add, im_add
-from bl.test import unzip_img_files
+from bl.test import unzip_img_files, scan_files
 from bl.test import test_motor_find, test_mongo_find
 from bl.test import get_simhash, asy_get_simhash
 from util.escape import safe_typed_from_str
 
 from debug_func import show_pretty_dict
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 class TestHandler(BaseHandler):
     @coroutine
@@ -50,8 +53,9 @@ class TestFileHandler(BaseHandler):
 
         if action == "upload_file":
             files = self.request.files['input_file']
-            res = unzip_img_files(self, files[0]['body'])
-            show_pretty_dict(res)
+            scan_files(files[0]['body'])
+            # unzip_img_files(self, files[0]['body'])
+            # show_pretty_dict(res)
             """
             fio = StringIO.StringIO(files[0]['body'])
             zip_file = zipfile.ZipFile(file=fio)
@@ -60,6 +64,7 @@ class TestFileHandler(BaseHandler):
                 res.append(save_oss(self.bucket, "img", zip_file.read(i), ".jpg"))
             show_pretty_dict(res)
             """
+            self.write({})
         else:
             raise HTTPError(400)
 

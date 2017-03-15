@@ -51,6 +51,21 @@ def unzip_img_files(handler, file_body):
     return ques_imgs
 
 
+def scan_files(file_body):
+    fio = StringIO.StringIO(file_body)
+    zip_file = zipfile.ZipFile(file=fio)
+    mt_num = re.compile(ur"(\d+)-(\d+)")
+    mt_type = re.compile(ur"(?<=_)(\S+题)")
+    for img_name in zip_file.namelist():
+        s = img_name.decode("gbk")
+        r_num = mt_num.search(s)
+        r_tp = mt_type.search(s)
+        print r_num.group(1), r_num.group(2)
+        print r_tp.group()
+        # s = img_name
+        # print s
+
+
 @coroutine
 def test_motor_find(handler):
     res = yield handler.asy_db.text_info.find().to_list(length=1000000)
