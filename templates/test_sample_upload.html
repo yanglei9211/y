@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block css %}
+    <style>
+        #upload_box{
+            width: 514px;
+            margin-left: -257px;
+        }
+        #upload_box input[type=file]{
+            line-height: 16px;
+        }
+        #upload_box h5{
+                height: 16px;
+                margin-top: 0px;
+                padding-left: 3px;
+                line-height: 16px;
+                border-left: 3px solid #599d41;
+                font-weight: normal;
+                color: #555;
+            }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <button class="btn btn-primary btn-lg" id="show_upload" data-toggle="modal">
+        上传
+    </button>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        请上传文件
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="txtStr" id="fk_txt">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="upload-confirm">
+                        确定上传
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $('#show_upload').click(function () {
+            $('#myModal').modal('show');
+        });
+        
+        $('#upload-confirm').click(function () {
+            
+        })
+            
+    
+        function ajax_upload_file(){
+            $.ajaxFileUpload({
+                url: "/test/sample_upload",
+                secureuri: false,
+                fileElementId: 'fk_txt', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status) {
+                    
+                }
+            })
+        }    
+    
+    </script>
+{% endblock %}

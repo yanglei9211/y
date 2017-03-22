@@ -11,6 +11,7 @@ from bl.test import unzip_img_files, scan_files
 from bl.test import test_motor_find, test_mongo_find
 from bl.test import get_simhash, asy_get_simhash
 from util.escape import safe_typed_from_str
+from util import file_util
 
 from debug_func import show_pretty_dict
 
@@ -53,7 +54,7 @@ class TestFileHandler(BaseHandler):
 
         if action == "upload_file":
             files = self.request.files['input_file']
-            scan_files(files[0]['body'])
+            _ = unzip_img_files(self, files[0]['body'])
             # unzip_img_files(self, files[0]['body'])
             # show_pretty_dict(res)
             """
@@ -97,3 +98,41 @@ class TestHttpClient(BaseHandler):
         ques_data = "aksjhdfjkladshfkjladshfkjladshfkadjlshdfkladshfkladjeiojkrf"
         res = get_simhash(ques_data)
         self.write({'s': res.text})
+
+
+class TestGenList(BaseHandler):
+    def get(self):
+        teacher_name = self.get_argument('teacher_username')
+        print teacher_name
+        res = [
+            {'student_username': "a", 'student_display_name': "aaa", 'class_name': "111"},
+            {'student_username': "b", 'student_display_name': "bbb", 'class_name': "222"},
+            {'student_username': "c", 'student_display_name': "ccc", 'class_name': "333"},
+            {'student_username': "d", 'student_display_name': "ddd", 'class_name': "444"},
+            {'student_username': "e", 'student_display_name': "eee", 'class_name': "555"},
+            {'student_username': "f", 'student_display_name': "fff", 'class_name': "666"},
+            {'student_username': "g", 'student_display_name': "ggg", 'class_name': "777"},
+            {'student_username': "h", 'student_display_name': "hhh", 'class_name': "888"},
+            {'student_username': "i", 'student_display_name': "iii", 'class_name': "999"},
+            {'student_username': "j", 'student_display_name': "jjj", 'class_name': "121"},
+            {'student_username': "k", 'student_display_name': "kkk", 'class_name': "122"},
+
+        ]
+        self.write({'body': res})
+
+
+class TestSampleUpload(BaseHandler):
+
+    def check_xsrf_cookie(self):
+        pass
+
+    def get(self):
+        self.render('test_sample_upload.html')
+
+    def post(self):
+        data = self.request.files['imgStr'][0]['body']
+        file_name = file_util.save_oss(self.oss_bucket, "txt", data, 'txt')
+        self.db.upload_history.save(
+            {'file_name': file_name}
+        )
+        self.write({'upload': "ok"})

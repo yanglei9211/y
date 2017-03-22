@@ -70,7 +70,7 @@ class BaseHandler(RequestHandler):
         return self.application.settings.get('asy_db')
 
     @property
-    def bucket(self):
+    def oss_bucket(self):
         return self.application.settings.get('oss_bucket')
 
     def get_argument(self, name, *args, **kwargs):

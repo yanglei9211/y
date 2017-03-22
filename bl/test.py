@@ -13,6 +13,8 @@ from tornado.gen import coroutine, Return, Task
 from tornado.httpclient import AsyncHTTPClient
 from util.file_util import save_oss
 
+from debug_func import show_pretty_dict
+
 
 @coroutine
 def asy_add(handler, a, b):
@@ -32,23 +34,40 @@ def im_add(a, b):
 def unzip_img_files(handler, file_body):
     fio = StringIO.StringIO(file_body)
     zip_file = zipfile.ZipFile(file=fio)
-    ques_nums = 0
-    ques_imgs = []
     match_num = re.compile(ur"(\d+)-(\d+)")
-    for img in zip_file.namelist():
-        img_name = save_oss(handler.bucket, "img", zip_file.read(img), "png")
-        res = match_num.search(img)
+    match_type = re.compile(ur"(?<=_)(\S+题)")
+    img_list = []
+    for _name in zip_file.namelist():
+        img_name = _name.decode("gbk")
+        res_num = match_num.search(img_name)
+        res_type = match_type.search(img_name)
+        assert res_num
+        assert res_type
+        # 保证文件名格式正确
+        d = {'q_num': int(res_num.group(1)),
+             'img_num': int(res_num.group(2)),
+             "type": res_type.group(),
+             # 'img_name': save_oss(handler.oss_bucket, "img", zip_file.read(_name), "png")
+             'img_name': "temp",
+             }
+        img_list.append(d)
 
-        if not res:
-            raise Exception(u"图片文件名有误")
-        v_num = int(res.group(2))
-        if v_num == 1:
-            ques_imgs.append([])
-            ques_nums += 1
-            ques_imgs[ques_nums-1].append(img_name)
+    img_list.sort(key=lambda x: (x['q_num'], x['img_num']))
+    show_pretty_dict(img_list)
+    print "#" * 23
+    questions = []
+    block = []
+    for idx in range(len(img_list)):
+        if idx == 0 or img_list[idx]['type'] == img_list[idx - 1]['type']:
+            block.append(img_list[idx])
         else:
-            ques_imgs[ques_nums-1].append(img_name)
-    return ques_imgs
+            questions.append(block)
+            block = [img_list[idx]]
+    if block:
+        questions.append(block)
+
+    show_pretty_dict(questions)
+    return questions
 
 
 def scan_files(file_body):

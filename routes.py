@@ -14,5 +14,8 @@ def get_routes():
         (r'/test/mongo/find', 'controller.test.TestMongoHandler'),
         (r'/test/getsim/(\w+)', 'controller.test.TestHttpClient'),
         (r'/test/asygetsim/(\w+)', 'controller.test.TestAsyHttpClient'),
+        (r'/test/sample_upload', 'controller.test.TestSampleUpload'),
+
+        (r'/api/students', 'controller.test.TestGenList'),
     ]
     return routes

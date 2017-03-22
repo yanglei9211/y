@@ -13,7 +13,7 @@ from tornado.ioloop import IOLoop
 from tornado.options import options, parse_command_line, parse_config_file
 from jinja2 import ChoiceLoader, FileSystemLoader
 from pymongo import MongoClient
-from motor.motor_tornado import MotorClient
+# from motor.motor_tornado import MotorClient
 
 import settings
 from util.template import JinjaLoader
@@ -55,7 +55,7 @@ class YWeb(object):
             'template_loader': loader,
             'debug': options.debug,
             'cookie_secret': options.cookie_secret,
-            'xsrf_cookies': False,
+            'xsrf_cookies': True,
             'db': self.setup_db_client(),
             'asy_db': self.setup_asy_db_client(),
             'oss_bucket': self.setup_oss_bucket(),
@@ -79,11 +79,14 @@ class YWeb(object):
         return db
 
     def setup_asy_db_client(self):
+        """
         client = MotorClient(options.mongodb_host, options.mongodb_port)
         asy_db = client[options.mongodb_name]
         logging.info('Connected to asy_db: %s --- %s:%d' %
                      (options.mongodb_name, options.mongodb_host, options.mongodb_port))
         return asy_db
+        """
+        return None
 
     def setup_user_db(self):
         pass

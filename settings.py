@@ -10,13 +10,16 @@ def define_app_options():
     define('log_level', default=logging.INFO)
     define('cookie_secret', default='dzwOrPqGdgOwBqyVdzwOrPqGdgOwBqyVdzwOrPqGdgOwBqyV')
     define('port', default=8080)
-    """
+
     define('mongodb_host', default='127.0.0.1')
     define('mongodb_port', default=27017)
+    define('mongodb_name', default="test")
+
     """
     define('mongodb_host', default='10.200.2.232')
     define('mongodb_port', default=23333)
     define('mongodb_name', default='cluster')
+    """
 
     define('oss_access_id', default='LTAIVDL7MzrhpspZ'),
     define('oss_access_key', default='dLkT1LRxmASCVt2IJ6DmaFVkePdhPl'),
