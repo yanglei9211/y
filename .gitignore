@@ -1,6 +1,7 @@
 *.pyc
 *.pyproj
 /server.conf
+server.conf
 /output
 .idea/
 /static/.DS_Store

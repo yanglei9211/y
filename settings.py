@@ -25,3 +25,5 @@ def define_app_options():
     define('oss_access_key', default='dLkT1LRxmASCVt2IJ6DmaFVkePdhPl'),
     define('oss_endpoint', 'http://oss-cn-beijing.aliyuncs.com')
     define('oss_name', 'erich')
+
+    define('test_path', default='data/test/')

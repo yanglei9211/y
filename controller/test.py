@@ -3,6 +3,7 @@
 import sys
 
 from util.base_handler import BaseHandler
+from tornado.options import options
 from tornado.gen import coroutine
 from tornado.web import HTTPError
 
@@ -12,7 +13,7 @@ from bl.test import unzip_img_files, scan_files
 from bl.test import test_motor_find, test_mongo_find
 from bl.test import get_simhash, asy_get_simhash
 from util.escape import safe_typed_from_str
-from util import file_util
+from util import file_util, data_file
 
 from debug_func import show_pretty_dict
 
@@ -134,7 +135,13 @@ class TestSampleUpload(BaseHandler):
 
     def post(self):
         data = self.request.files['txtStr'][0]['body']
-        file_name = file_util.save_oss(self.oss_bucket, "txt", data, 'txt')
+
+        # 上传oss
+        # file_name = file_util.save_oss(self.oss_bucket, "txt", data, 'txt')
+        # 上传本地
+        print options.test_path
+        file_name = data_file.data_save(options.test_path, data, '.txt')
+
         self.db.upload_history.update({
             'file_name': file_name
         }, {'$set': {'file_name': file_name}}, upsert=True)
