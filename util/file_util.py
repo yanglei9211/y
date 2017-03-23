@@ -27,7 +27,12 @@ def save_oss(bucket, prefix, content, ext=""):
 
 
 def open_oss(bucket, filename):
-    pass
+    try:
+        stream = bucket.get_object(filename)
+    except OssError as e:
+        logging.error("open file error, filename: %s, error: %s" % (filename, str(e)))
+        return None
+    return stream
 
 
 def fullpath(file_name):

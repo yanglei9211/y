@@ -17,7 +17,9 @@ def get_routes():
         (r'/test/fileinput', 'controller.test_file.TestFileHandler'),
         (r'/test/oss/file', 'controller.test_file.OssUploadHandler'),
         (r'/test/local/file', 'controller.test_file.LocalUploadHandler'),
-        (r'/test/download/(.*).txt', 'controller.test_file.TestDownloadHandler'),
+        (r'/test/download/(.*).txt', 'controller.test_file.TextDownloadHandler'),
+        (r'/test/download/(.*).zip', 'controller.test_file.ZipDownloadHandler'),
+        (r'/test/zip', 'controller.test_file.ZipPackageHandler'),
 
         (r'/api/students', 'controller.test.TestGenList'),
     ]

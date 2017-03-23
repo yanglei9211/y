@@ -3,6 +3,7 @@
 import os
 import sys
 import logging
+import zipfile
 
 from tornado.gen import coroutine
 from tornado.web import HTTPError
@@ -94,16 +95,16 @@ class LocalUploadHandler(BaseSampleUpload):
 
 class TestDownloadHandler(BaseDownloadHandler):
 
-    def initialize(self):
-        self.root = options.test_path
-
     def head(self, file_name):
         return self.get(file_name, include_body=False)
 
+    def fetch_file_name(self, file_name):
+        # need overwrite
+        raise HTTPError(501, "need overwrite")
+
     @coroutine
     def get(self, file_name, include_body=True):
-        file_name = "%s.txt" % file_name
-
+        file_name = self.fetch_file_name(file_name)
         self.absolute_path = None
         logging.info('download file, file_name: {}, root: {}'.format(
             file_name, self.root
@@ -114,3 +115,30 @@ class TestDownloadHandler(BaseDownloadHandler):
             fullpath, self.path, include_body
         ))
         super(TestDownloadHandler, self).get(os.path.abspath(fullpath), include_body)
+
+
+class TextDownloadHandler(TestDownloadHandler):
+
+    def initialize(self):
+        self.root = options.test_path
+
+    def fetch_file_name(self, file_name):
+        return "%s.txt" % file_name
+
+
+class ZipDownloadHandler(TestDownloadHandler):
+
+    def initialize(self):
+        self.root = options.test_zip_path
+
+    def fetch_file_name(self, file_name):
+        return "%s.zip" % file_name
+
+
+class ZipPackageHandler(BaseHandler):
+    def get(self):
+        res = tf_bl.fetch_file_list(self)
+        if res:
+            zip_name = tf_bl.package_files(self, res)
+            download_url = "/test/download/%s" % zip_name
+            self.redirect(download_url)

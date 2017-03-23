@@ -27,3 +27,4 @@ def define_app_options():
     define('oss_name', 'erich')
 
     define('test_path', default='data/test/')
+    define('test_zip_path', default='data/test/zip/')

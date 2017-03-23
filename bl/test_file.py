@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import re
+import os
 import StringIO
 import zipfile
 
+from tornado.options import options
+
 from util import file_util
+from util import data_file
 
 from debug_func import show_pretty_dict
 
@@ -70,3 +74,25 @@ def scan_files(file_body):
         print r_tp.group()
         # s = img_name
         # print s
+
+
+def fetch_file_list(handler):
+    _data = list(handler.db.upload_history.find())
+    return _data
+
+
+def package_files(handler, files):
+    z = zipfile.ZipFile('temp.zip', 'w')
+    for f in files:
+        content = data_file.data_open(options.test_path, f['file_name']).read() \
+            if f['dest'] == 'local' \
+            else file_util.open_oss(handler.oss_bucket, f['file_name']).read()
+        print f['file_name']
+        print content
+        z.writestr(f['file_name'], content)
+    z.close()
+    with open('temp.zip', 'r') as z_obj:
+        zip_tmp = z_obj.read()
+        zip_name = data_file.data_save(options.test_zip_path, zip_tmp, ".zip")
+    os.remove('temp.zip')
+    return zip_name
