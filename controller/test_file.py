@@ -100,6 +100,7 @@ class TestDownloadHandler(BaseDownloadHandler):
         # need overwrite
         raise HTTPError(501, "need overwrite")
 
+    #   加cor有用么?测试看起来似乎没什么卵用
     @coroutine
     def get(self, file_name, include_body=True):
         file_name = self.fetch_file_name(file_name)

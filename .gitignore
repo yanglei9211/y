@@ -8,3 +8,4 @@ server.conf
 .DS_Store
 .idea/*.*
 /util/*.pyc
+*.txt
