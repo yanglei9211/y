@@ -28,3 +28,7 @@ def save_oss(bucket, prefix, content, ext=""):
 
 def open_oss(bucket, filename):
     pass
+
+
+def full_path(file_name):
+    return "http://erich.oss-cn-beijing.aliyuncs.com/" + file_name

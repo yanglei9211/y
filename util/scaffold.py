@@ -20,6 +20,9 @@ class Scaffold(object):
         settings.define_app_options()
         parse_command_line(final=False)
         current_dir = os.path.dirname(os.path.abspath(__file__))
+        print '#' * 23
+        print options.debug
+
         if options.debug:
             conf_file_path = os.path.join(current_dir, 'server.conf')
         else:

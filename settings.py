@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# fileencoding=utf-8
+# encoding: utf-8
 
 import logging
 from tornado.options import define

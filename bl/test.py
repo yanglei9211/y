@@ -11,7 +11,7 @@ import tornado
 import requests
 from tornado.gen import coroutine, Return, Task
 from tornado.httpclient import AsyncHTTPClient
-from util.file_util import save_oss
+from util.file_util import save_oss, full_path
 
 from debug_func import show_pretty_dict
 
@@ -102,7 +102,7 @@ def test_mongo_find(handler):
 def asy_get_simhash(data):
     client = AsyncHTTPClient()
     data = {'action': 'calc_simhash', 'ques_data': data,
-            'subject':'math', 'edu': 'junior'}
+            'subject': 'math', 'edu': 'junior'}
     url = 'http://10.200.2.232:8000/cluster/cluster_text'
     response = yield client.fetch(
         url,
@@ -118,3 +118,12 @@ def get_simhash(data):
     url = 'http://10.200.2.232:8000/cluster/cluster_text'
     res = requests.post(url, data)
     return res
+
+
+def set_file_path(handler, files):
+    def set_path(f):
+        f['file_path'] = full_path(f['file_name'])
+
+    map(set_path, files)
+    for i in files:
+        print i

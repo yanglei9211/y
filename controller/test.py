@@ -6,6 +6,7 @@ from util.base_handler import BaseHandler
 from tornado.gen import coroutine
 from tornado.web import HTTPError
 
+from bl import test as test_bl
 from bl.test import asy_add, add, im_add
 from bl.test import unzip_img_files, scan_files
 from bl.test import test_motor_find, test_mongo_find
@@ -127,12 +128,15 @@ class TestSampleUpload(BaseHandler):
         pass
 
     def get(self):
-        self.render('test_sample_upload.html')
+        files = list(self.db.upload_history.find())
+        test_bl.set_file_path(self, files)
+        self.render('test_sample_upload.html', files=files)
 
     def post(self):
-        data = self.request.files['imgStr'][0]['body']
+        data = self.request.files['txtStr'][0]['body']
         file_name = file_util.save_oss(self.oss_bucket, "txt", data, 'txt')
-        self.db.upload_history.save(
-            {'file_name': file_name}
-        )
-        self.write({'upload': "ok"})
+        self.db.upload_history.update({
+            'file_name': file_name
+        }, {'$set': {'file_name': file_name}}, upsert=True)
+
+        self.write({'upload': "ok", 'status': 1})
