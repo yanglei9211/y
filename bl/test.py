@@ -125,5 +125,3 @@ def set_file_path(handler, files):
         f['file_path'] = full_path(f['file_name'])
 
     map(set_path, files)
-    for i in files:
-        print i
