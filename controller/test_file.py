@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
-import sys
 import logging
-import zipfile
 
 from tornado.gen import coroutine
 from tornado.web import HTTPError
@@ -136,6 +134,7 @@ class ZipDownloadHandler(TestDownloadHandler):
 
 
 class ZipPackageHandler(BaseHandler):
+
     def get(self):
         res = tf_bl.fetch_file_list(self)
         if res:

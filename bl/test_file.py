@@ -87,8 +87,6 @@ def package_files(handler, files):
         content = data_file.data_open(options.test_path, f['file_name']).read() \
             if f['dest'] == 'local' \
             else file_util.open_oss(handler.oss_bucket, f['file_name']).read()
-        print f['file_name']
-        print content
         z.writestr(f['file_name'], content)
     z.close()
     with open('temp.zip', 'r') as z_obj:
