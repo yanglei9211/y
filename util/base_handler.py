@@ -2,12 +2,16 @@
 # encoding=utf-8
 import logging
 
+from tornado import httputil
+from tornado.util import bytes_type
 from tornado.web import RequestHandler
+from tornado.web import StaticFileHandler
 from tornado.options import options
 from tornado.escape import json_decode
 
 from bson.json_util import dumps, loads
 from util.escape import json_encode, safe_typed_from_str
+from util.common import force_browser_download_content
 from errors import BLError
 
 from app_define import USER_ROLE_MANAGER
@@ -128,3 +132,112 @@ class BaseHandler(RequestHandler):
     @staticmethod
     def loads(s):
         return loads(s)
+
+
+class BaseDownloadHandler(BaseHandler, StaticFileHandler):
+    '''
+    don't touch me unless you understand MRO !!
+
+    override get, change any arguments into necessary absolute path
+    '''
+    def get(self, absolute_path, include_body=True):
+        '''
+        this is mostly copied from tornado
+        '''
+        # Set up our path instance variables.
+        assert hasattr(self, 'path')
+        assert hasattr(self, 'root')
+        self.absolute_path = self.validate_absolute_path(self.root, absolute_path)
+        if self.absolute_path is None:
+            return
+
+        self.modified = self.get_modified_time()
+        self.set_headers()
+
+        if self.should_return_304():
+            self.set_status(304)
+            return
+
+        request_range = None
+        range_header = self.request.headers.get("Range")
+        if range_header:
+            # As per RFC 2616 14.16, if an invalid Range header is specified,
+            # the request will be treated as if the header didn't exist.
+            request_range = httputil._parse_request_range(range_header)
+
+        size = self.get_content_size()
+        if request_range:
+            start, end = request_range
+            if (start is not None and start >= size) or end == 0:
+                # As per RFC 2616 14.35.1, a range is not satisfiable only: if
+                # the first requested byte is equal to or greater than the
+                # content, or when a suffix with length 0 is specified
+                self.set_status(416)  # Range Not Satisfiable
+                self.set_header("Content-Type", "text/plain")
+                self.set_header("Content-Range", "bytes */%s" % (size, ))
+                return
+            if start is not None and start < 0:
+                start += size
+            if end is not None and end > size:
+                # Clients sometimes blindly use a large range to limit their
+                # download size; cap the endpoint at the actual file size.
+                end = size
+            # Note: only return HTTP 206 if less than the entire range has been
+            # requested. Not only is this semantically correct, but Chrome
+            # refuses to play audio if it gets an HTTP 206 in response to
+            # ``Range: bytes=0-``.
+            if size != (end or size) - (start or 0):
+                self.set_status(206)  # Partial Content
+                self.set_header("Content-Range",
+                                httputil._get_content_range(start, end, size))
+        else:
+            start = end = None
+
+        if start is not None and end is not None:
+            content_length = end - start
+        elif end is not None:
+            content_length = end
+        elif start is not None:
+            content_length = size - start
+        else:
+            content_length = size
+        self.set_header("Content-Length", content_length)
+
+        if include_body:
+            content = self.get_content(self.absolute_path, start, end)
+            if isinstance(content, bytes_type):
+                content = [content]
+            for chunk in content:
+                self.write(chunk)
+                self.flush()
+        else:
+            assert self.request.method == "HEAD"
+
+    def set_extra_headers(self, path):
+        '''
+        @override
+        '''
+        fname = self.get_argument('fname', u'')
+        # force browser to save file with name fname instead of opening it
+        if fname:
+            force_browser_download_content(self, fname)
+
+        ua = self.request.headers.get("User-Agent")
+        if ua and "MSIE 8." in ua:
+            # 修复IE8下载https链接文档的bug
+            # 见 https://support.microsoft.com/en-us/kb/323308
+            self.set_header("Pragma", "private")
+            self.clear_header("Cache-Control")
+            self.clear_header("Expires")
+
+    @classmethod
+    def get_absolute_path(cls, root, path):
+        raise NotImplementedError()
+
+    @classmethod
+    def make_static_url(cls, settings, path):
+        raise NotImplementedError()
+
+    @classmethod
+    def get_version(cls, settings, path):
+        raise NotImplementedError()

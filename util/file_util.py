@@ -30,5 +30,5 @@ def open_oss(bucket, filename):
     pass
 
 
-def full_path(file_name):
+def fullpath(file_name):
     return "http://erich.oss-cn-beijing.aliyuncs.com/" + file_name

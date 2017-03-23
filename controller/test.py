@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import os
 import sys
+import logging
 
-from util.base_handler import BaseHandler
+from util.base_handler import BaseHandler, BaseDownloadHandler
 from tornado.options import options
 from tornado.gen import coroutine
 from tornado.web import HTTPError
 
-from bl import test as test_bl
 from bl.test import asy_add, add, im_add
-from bl.test import unzip_img_files, scan_files
 from bl.test import test_motor_find, test_mongo_find
 from bl.test import get_simhash, asy_get_simhash
 from util.escape import safe_typed_from_str
@@ -19,6 +19,7 @@ from debug_func import show_pretty_dict
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
 
 class TestHandler(BaseHandler):
     @coroutine
@@ -44,32 +45,6 @@ class TestImHandler(BaseHandler):
         b = safe_typed_from_str(self.get_argument('b'), int)
         res = im_add(a, b)
         self.write({'ans': res})
-
-
-class TestFileHandler(BaseHandler):
-
-    def get(self):
-        self.render('test_fileinput.html')
-
-    def post(self):
-        action = self.get_argument('action')
-
-        if action == "upload_file":
-            files = self.request.files['input_file']
-            _ = unzip_img_files(self, files[0]['body'])
-            # unzip_img_files(self, files[0]['body'])
-            # show_pretty_dict(res)
-            """
-            fio = StringIO.StringIO(files[0]['body'])
-            zip_file = zipfile.ZipFile(file=fio)
-            res = []
-            for i in zip_file.namelist():
-                res.append(save_oss(self.bucket, "img", zip_file.read(i), ".jpg"))
-            show_pretty_dict(res)
-            """
-            self.write({})
-        else:
-            raise HTTPError(400)
 
 
 class TestMotorHandler(BaseHandler):
@@ -123,27 +98,3 @@ class TestGenList(BaseHandler):
         self.write({'body': res})
 
 
-class TestSampleUpload(BaseHandler):
-
-    def check_xsrf_cookie(self):
-        pass
-
-    def get(self):
-        files = list(self.db.upload_history.find())
-        test_bl.set_file_path(self, files)
-        self.render('test_sample_upload.html', files=files)
-
-    def post(self):
-        data = self.request.files['txtStr'][0]['body']
-
-        # 上传oss
-        # file_name = file_util.save_oss(self.oss_bucket, "txt", data, 'txt')
-        # 上传本地
-        print options.test_path
-        file_name = data_file.data_save(options.test_path, data, '.txt')
-
-        self.db.upload_history.update({
-            'file_name': file_name
-        }, {'$set': {'file_name': file_name}}, upsert=True)
-
-        self.write({'upload': "ok", 'status': 1})

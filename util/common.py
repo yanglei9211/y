@@ -69,3 +69,30 @@ class Pager:
         if total_count % self.page_size:
             res += 1
         return res
+
+
+_INVALID_HTTP_HEADER_CHAR_RE = re.compile(br"[\x00-\x1f]")
+
+
+def filter_unsafe_http_header_value(value):
+    return _INVALID_HTTP_HEADER_CHAR_RE.sub(' ', value)
+
+
+def force_browser_download_content(handler, fname):
+    fname = filter_unsafe_http_header_value(fname)
+    if not fname:
+        fname = u'未命名'
+    agent = httpagentparser.detect(handler.request.headers.get('User-Agent', u''))
+    browser = agent.get('browser', None) if agent else None
+    header_set = False
+    escaped_fname = url_escape(fname, False)
+    if browser:
+        if browser.get('name', u'') == 'Microsoft Internet Explorer' and\
+                browser.get('version', u'') in ('7.0', '8.0'):
+            handler.set_header('Content-Disposition',
+                               'attachment;filename={}'.format(escaped_fname))
+            header_set = True
+    if not header_set:
+        handler.set_header('Content-Disposition',
+                           'attachment;filename="{}";filename*=UTF-8\'\'{}'.format(
+                               fname.encode('utf-8'), escaped_fname))

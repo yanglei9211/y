@@ -9,12 +9,15 @@ def get_routes():
         (r'/test', 'controller.test.TestHandler'),
         (r'/test2', 'controller.test.TestNormalHandler'),
         (r'/test3', 'controller.test.TestImHandler'),
-        (r'/test/fileinput', 'controller.test.TestFileHandler'),
         (r'/test/motor/find', 'controller.test.TestMotorHandler'),
         (r'/test/mongo/find', 'controller.test.TestMongoHandler'),
         (r'/test/getsim/(\w+)', 'controller.test.TestHttpClient'),
         (r'/test/asygetsim/(\w+)', 'controller.test.TestAsyHttpClient'),
-        (r'/test/sample_upload', 'controller.test.TestSampleUpload'),
+
+        (r'/test/fileinput', 'controller.test_file.TestFileHandler'),
+        (r'/test/oss/file', 'controller.test_file.OssUploadHandler'),
+        (r'/test/local/file', 'controller.test_file.LocalUploadHandler'),
+        (r'/test/download/(.*).txt', 'controller.test_file.TestDownloadHandler'),
 
         (r'/api/students', 'controller.test.TestGenList'),
     ]
