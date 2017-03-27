@@ -10,18 +10,21 @@ from tornado.options import options
 from util.base_handler import BaseHandler, BaseDownloadHandler
 from util import data_file, file_util
 from bl import test_file as tf_bl
+from errors import BLError
 
 
 class TestFileHandler(BaseHandler):
     """
     上传插件fileinput
     """
+    def check_xsrf_cookie(self):
+        pass
+
     def get(self):
         self.render('test_fileinput.html')
 
     def post(self):
         action = self.get_argument('action')
-
         if action == "upload_file":
             files = self.request.files['input_file']
             _ = tf_bl.unzip_img_files(self, files[0]['body'])

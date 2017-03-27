@@ -1,21 +1,14 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import os
 import sys
-import logging
 
-from util.base_handler import BaseHandler, BaseDownloadHandler
-from tornado.options import options
+from util.base_handler import BaseHandler
 from tornado.gen import coroutine
-from tornado.web import HTTPError
 
 from bl.test import asy_add, add, im_add
 from bl.test import test_motor_find, test_mongo_find
 from bl.test import get_simhash, asy_get_simhash
 from util.escape import safe_typed_from_str
-from util import file_util, data_file
-
-from debug_func import show_pretty_dict
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -96,5 +89,3 @@ class TestGenList(BaseHandler):
 
         ]
         self.write({'body': res})
-
-

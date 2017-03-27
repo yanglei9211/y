@@ -3,4 +3,5 @@
 
 
 class BLError(Exception):
-    pass
+    def __init__(self, msg):
+        self.message = msg

@@ -1,21 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import re
 import time
 import urllib
-import zipfile
-import StringIO
 from time import sleep
 
 import tornado
 import requests
-from tornado.options import options
 from tornado.gen import coroutine, Return, Task
 from tornado.httpclient import AsyncHTTPClient
-from util import file_util
-from util import data_file
-
-from debug_func import show_pretty_dict
 
 
 @coroutine
@@ -66,6 +58,3 @@ def get_simhash(data):
     url = 'http://10.200.2.232:8000/cluster/cluster_text'
     res = requests.post(url, data)
     return res
-
-
-
