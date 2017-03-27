@@ -15,6 +15,10 @@ def define_app_options():
     define('mongodb_port', default=27017)
     define('mongodb_name', default="test")
 
+    define('userdb_host', default='127.0.0.1')
+    define('userdb_port', default=27017)
+    define('userdb_name', default='user')
+
     """
     define('mongodb_host', default='10.200.2.232')
     define('mongodb_port', default=23333)

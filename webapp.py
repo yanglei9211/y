@@ -89,7 +89,11 @@ class YWeb(object):
         return None
 
     def setup_user_db(self):
-        pass
+        client = MongoClient(options.userdb_host, options.userdb_port)
+        userdb = client[options.userdb_name]
+        logging.info('Connected to userdb: %s --- %s: %d' %
+                     (options.userdb_host, options.userdb_port, options.userdb_name))
+        return userdb
 
     def setup_oss_bucket(self):
         auth = oss2.Auth(options.oss_access_id, options.oss_access_key)

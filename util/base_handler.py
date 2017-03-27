@@ -66,6 +66,10 @@ class BaseHandler(RequestHandler):
         return self.current_user and self.current_user['role'] == USER_ROLE_MANAGER
 
     @property
+    def userdb(self):
+        return self.application.settings.get('userdb')
+
+    @property
     def db(self):
         return self.application.settings.get('db')
 
