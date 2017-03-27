@@ -58,6 +58,7 @@ class YWeb(object):
             'xsrf_cookies': True,
             'db': self.setup_db_client(),
             'asy_db': self.setup_asy_db_client(),
+            'userdb': self.setup_user_db(),
             'oss_bucket': self.setup_oss_bucket(),
             'static_path': u'/static/',
             'static_handler_class': SmartStaticFileHandler,
