@@ -93,7 +93,7 @@ class YWeb(object):
         client = MongoClient(options.userdb_host, options.userdb_port)
         userdb = client[options.userdb_name]
         logging.info('Connected to userdb: %s --- %s: %d' %
-                     (options.userdb_host, options.userdb_port, options.userdb_name))
+                     (options.userdb_name, options.userdb_host, options.userdb_port))
         return userdb
 
     def setup_oss_bucket(self):
