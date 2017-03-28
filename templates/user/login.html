@@ -35,7 +35,8 @@ function login() {
     var pwd = $('#password').val();
     var password = hash(pwd, username);
      y.post(url, {'username': username, 'password': password}, function (data) {
-        window.location = data['url'];
+         alert(data['url']);
+         window.location.href = data['url'];
     })
 }
 

@@ -32,7 +32,11 @@ class BaseHandler(RequestHandler):
 
     def get_main_domain(self):
         host = self.request.host.split(':')[0]
-        return '.' + '.'.join(host.split('.')[-3:])
+        print host
+        if ".com" not in self.request.host:
+            return host
+        else:
+            return '.' + '.'.join(host.split('.')[-3:])
 
     def get_debug_user(self):
         user = dict(role=USER_ROLE_MANAGER, name=u'debug',
