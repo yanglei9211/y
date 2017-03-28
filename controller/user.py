@@ -95,6 +95,11 @@ class LoginHandler(BaseHandler):
             raise BLError(u'用户不存在')
         if not user['valid']:
             raise BLError(u'用户不可用')
+
+        print password
+        print hash_pwd(password, user['salt'])
+        print user['password']
+
         if hash_pwd(password, user['salt']) != user['password']:
             raise BLError(u'密码错误')
         self.userdb.user.update({'username': username},
@@ -116,6 +121,7 @@ class LoginHandler(BaseHandler):
             cookie_user['login_sn'],
             domain=self.get_main_domain(),
         )
+        
         self.write({'url': self.get_next_url()})
 
     def get_next_url(self):

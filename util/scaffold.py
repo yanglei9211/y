@@ -20,6 +20,7 @@ class Scaffold(object):
         settings.define_app_options()
         parse_command_line(final=False)
         current_dir = os.path.dirname(os.path.abspath(__file__))
+        logging.info('Running in %s mode' % ('debug' if options.debug else 'production'))
         print '#' * 23
         print options.debug
 
@@ -33,13 +34,19 @@ class Scaffold(object):
 
         parse_command_line(final=True)
         self.db = self.setup_db()
+        self.userdb = self.setup_userdb()
 
     def setup_db(self):
-        logging.info('Running in %s mode' % ('debug' if options.debug else 'production'))
         db_name = options.mongodb_name
         db = MongoClient(options.mongodb_host, options.mongodb_port)[db_name]
-        logging.info('Connexted to db %s ' % options.mongodb_host)
+        logging.info('Connexted to db %s:%d ' % (options.mongodb_host, options.mongodb_port))
         return db
+
+    def setup_userdb(self):
+        db_name = options.userdb_name
+        userdb = MongoClient(options.userdb_host, options.userdb_port)[db_name]
+        logging.info('Connexted to db %s:%d ' % (options.userdb_host, options.userdb_port))
+        return userdb
 
     def timeit(self, fn, *args, **kwargs):
         t1 = time.clock()

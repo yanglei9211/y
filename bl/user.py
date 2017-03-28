@@ -19,7 +19,7 @@ def gen_salt():
     return ''.join(random.choice(string.letters) for i in xrange(16))
 
 
-def create(handler, username, name, password):
+def create(handler, username, name, password, role):
     salt = gen_salt()
     password = hash_pwd(password, salt)
     return {
@@ -30,6 +30,7 @@ def create(handler, username, name, password):
         'valid': True,
         'ctime': time.time(),
         'creator': handler.m,
+        'role': role
     }
 
 

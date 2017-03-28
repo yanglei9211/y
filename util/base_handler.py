@@ -27,7 +27,7 @@ class BaseHandler(RequestHandler):
         logging.info('user:%s is accessing %s' % (user, uri))
 
         if user is None and not self.allow_anony:
-            self.redirect('/auth/login')
+            self.redirect('/user/login')
             return
 
     def get_main_domain(self):
@@ -130,7 +130,6 @@ class BaseHandler(RequestHandler):
             template, **kwargs)
 
     def dumps(self, obj):
-        obj = self.sorted(obj)
         return dumps(obj, ensure_ascii=False, indent=4, sort_keys=True)
 
     @staticmethod
