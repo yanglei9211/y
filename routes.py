@@ -22,5 +22,7 @@ def get_routes():
         (r'/test/zip', 'controller.test_file.ZipPackageHandler'),
 
         (r'/api/students', 'controller.test.TestGenList'),
+
+        (r'/user/login', 'controller.user.LoginHandler')
     ]
     return routes

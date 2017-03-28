@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block css %}
+{% endblock %}
+{% block body %}
+    <h1>login</h1>
+    <div class="container">
+        <div class="inner" id="login-wrap">
+            <div>
+                <input type="text" id="username" placeholder="用户名" autocomplete="off">
+            </div>
+            <div>
+                <input type="text" id="password" placeholder="账户" autocomplete="off">
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" name="checkbox" id="lasting" checked>记住我
+                </label>
+            </div>
+            <div>
+                <button class="btn btn-primary" id="login">登录</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+<script src="{{ static_url('js/sha1.js') }}"></script>
+<script>
+function hash(str, salt) {
+    return CryptoJS.SHA1(str + '|' + salt).toString(CryptoJS.enc.Hex).slice(0, 16);
+}
+
+var url = window.location.pathname;
+function login() {
+    var username = $('#username').val();
+    var pwd = $('password').val();
+    var password = hash(pwd, username);
+     y.post(url, {'username': username, 'password': password}, function (data) {
+        window.location = data['url'];
+    })
+}
+
+$('#login').click(function (e) {
+    alert("test");
+    login();
+});
+
+$(document).keydown(function (e) {
+    if (e.keyCode == 13){
+        login();
+    }
+});
+</script>
+{% endblock %}

@@ -2,9 +2,11 @@
 *.pyproj
 /server.conf
 server.conf
+prod.conf
 /output
 .idea/
 /static/.DS_Store
+/static/js/.DS_Store
 .DS_Store
 .idea/*.*
 /util/*.pyc

@@ -35,7 +35,7 @@ class YWeb(object):
         if options.debug:
             conf_file_path = os.path.join(self_dir_path, 'server.conf')
         else:
-            pass
+            conf_file_path = os.path.join(self_dir_path, 'prod.conf')
         if os.path.exists(conf_file_path):
             parse_config_file(conf_file_path, final=False)
         parse_command_line(final=True)
