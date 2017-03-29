@@ -14,6 +14,7 @@ from bl.user import create as create_user
 from bl.user import gen_salt, hash_pwd
 from bl.user import assert_name_legal, assert_username_legal
 from errors import BLError
+from app_define import USER_ROLE_FULL, USER_ROLE_PARTIAL
 
 
 class UserHandler(BaseHandler):
@@ -24,6 +25,15 @@ class UserHandler(BaseHandler):
             user = fetch_user(self, uid)
         else:
             user = None
+
+        self.render(
+            'user/form.html',
+            user=user,
+            roles={
+                USER_ROLE_FULL: u'全职',
+                USER_ROLE_PARTIAL: u'兼职'
+            }
+        )
 
         self.render('user/form.html', user=user)
 

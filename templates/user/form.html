@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block css %}
+{% endblock %}
+{% block body %}
+<div class="list-box form-horizontal" >
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="username">用户名</label>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" {{ 'disabled="disabled"' if user else ''}}
+            id="username" value="{{ user.username }}"/>
+        </div>
+    </div>
+    <div class="form-control">
+        <label class="control-label col-sm-2" for="name">姓名</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="name" autocomplete="off" value="{{ user.name }}"/>
+        </div>
+    </div>
+    <div class="form-control">
+        <label class="control-label col-sm-2" for="password">密码</label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="password" value="" placeholder="不修改可为空"/>
+        </div>
+    </div>
+    <div class="form-control">
+        <label class="control-label col-sm-2" for="role">角色</label>
+        <div class="col-sm-10">
+            <select id="role" class="form-control">
+                {% for role in roles %}
+                    <option value="{{ role }}" {{ 'selected="selected"' if role == user.role else '' }}>
+                        {{ roles[role] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    {% if user %}
+        <div class="form-group">
+            <label class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                {% if user.valid %}
+                    <span class="label label-success">有效</span>
+                {% else %}
+                    <span class="label label-danger">已禁用</span>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            {% if user %}
+                <button class="save btn btn-success" {% if not user.valid %}disabled>保存</button>
+                <button class="delete btn btn-danger">{{ '禁用' if user.valid else '解禁' }}</button>
+            {% else %}
+                <button class="create btn btn-success">创建</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ static_url('js/sha1.js') }}"></script>
+<script>
+function hash(str, salt) {
+    return CryptoJS.SHA1(str + '|' + salt).toString(CryptoJS.enc.Hex).slice(0, 16);
+}
+
+function check_username(username) {
+    var re_username = /^[A_Za-z0-9_]{4,20}$/;
+    return re_username.test(username);
+}
+
+function check_name(name){
+    var re_name = /^[\u4E00-\u9FCCa-zA-Z0-9_]{1,20}/;
+    return re_name.test(name);
+}
+
+function check_password(password){
+    var re_password = /^[A-Za-z0-9\+\-\,\.\!\?\@\#\$\%\^\&\*\()\[\]\\]{6,20}$/;
+    return re_password.test(password)
+}
+
+function input_validation(data, cb){
+    if (!check_username(data['username'])){
+        alert('用户名不合法,要求4-20位,只包含大小写字母,数字和下划线_');
+    } else if (!check_name(data['name'])){
+        alert('姓名不合法,要求1-20位,只包含中文,大小写字母,数字和下划线_');
+    }else {
+        if (data['password']) {
+            if (!check_password(data['password'])){
+                alert('密码不合法,要求6-20位,只允许包含大小写字母,数字,shift+数字上的特殊字符');
+                return
+            } else {
+                data['password'] = hash(data['password'], data['username']);
+            }
+        }
+        cb(data)
+    }
+}
+
+function send_data(data){
+    url = "";
+    y.gui_post(url, data, function (data) {
+        window.location = "/manager/users";
+    }, [$(this)]);
+}
+
+$('.save').click(function () {
+    
+})
+
+
+
+
+</script>    
+{% endblock %}
