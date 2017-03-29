@@ -2,37 +2,30 @@
 {% block css %}
 {% endblock %}
 {% block body %}
-<div class="list-box form-horizontal" >
-    <div class="form-group">
-        <label class="control-label col-sm-2" for="username">用户名</label>
-        <div class="col-sm-10">
-            <input type="email" class="form-control" {{ 'disabled="disabled"' if user else ''}}
-            id="username" value="{{ user.username }}"/>
-        </div>
+<div class="panel panel-default" >
+>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">用户名</span>
+      <input id="name" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
     </div>
-    <div class="form-control">
-        <label class="control-label col-sm-2" for="name">姓名</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="name" autocomplete="off" value="{{ user.name }}"/>
-        </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">姓名</span>
+      <input id="name" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
     </div>
-    <div class="form-control">
-        <label class="control-label col-sm-2" for="password">密码</label>
-        <div class="col-sm-10">
-            <input type="password" class="form-control" id="password" value="" placeholder="不修改可为空"/>
-        </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">密码</span>
+      <input id="name" type="password" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
     </div>
-    <div class="form-control">
-        <label class="control-label col-sm-2" for="role">角色</label>
-        <div class="col-sm-10">
-            <select id="role" class="form-control">
-                {% for role in roles %}
-                    <option value="{{ role }}" {{ 'selected="selected"' if role == user.role else '' }}>
-                        {{ roles[role] }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
+
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">角色</span>
+        <select id="role" class="form-control">
+            {% for role in roles %}
+                <option value="{{ role }}" {{ 'selected="selected"' if role == user.role else '' }}>
+                    {{ roles[role] }}
+                </option>
+            {% endfor %}
+        </select>
     </div>
     {% if user %}
         <div class="form-group">
@@ -50,7 +43,7 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-10">
             {% if user %}
-                <button class="save btn btn-success" {% if not user.valid %}disabled>保存</button>
+                <button class="save btn btn-success" {% if not user.valid %}disabled{% endif %}>保存</button>
                 <button class="delete btn btn-danger">{{ '禁用' if user.valid else '解禁' }}</button>
             {% else %}
                 <button class="create btn btn-success">创建</button>
@@ -96,7 +89,7 @@ function input_validation(data, cb){
                 data['password'] = hash(data['password'], data['username']);
             }
         }
-        cb(data)
+        cb()
     }
 }
 
@@ -107,12 +100,40 @@ function send_data(data){
     }, [$(this)]);
 }
 
+function collect_info(){
+    var username = $('#username').val();
+    var name = $('#name').val();
+    var role = $('#role').val();
+    var password = $('#password').val();
+    return {
+        'username': username,
+        'name': name,
+        'role': role,
+        'password': password
+    }
+}
+
 $('.save').click(function () {
-    
+    var data = collect_info();
+    data['action'] = 'save';
+    input_validation(data, function () {
+        send_data(data)
+    })
+});
+
+$('.create').click(function () {
+    var data = collect_info();
+    data['action'] = 'create';
+    input_validation(data, function () {
+        send_data(data)
+    })
+});
+
+$('.delete').click(function () {
+    y.gui_post("", {'action': 'delete'}, function () {
+        window.location = "/manager/users"
+    }, [$(this)])
 })
-
-
-
 
 </script>    
 {% endblock %}

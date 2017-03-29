@@ -13,13 +13,27 @@ from bl.user import fetch_user
 from bl.user import create as create_user
 from bl.user import gen_salt, hash_pwd
 from bl.user import assert_name_legal, assert_username_legal
+from bl.user import get_all_user
 from errors import BLError
 from app_define import USER_ROLE_FULL, USER_ROLE_PARTIAL
+from app_define import USER_ROLE_TRANS
+
+
+class ListHandler(BaseHandler):
+    def get(self):
+        users = get_all_user(self)
+        for user in users:
+            user['role_str'] = USER_ROLE_TRANS(user['role'])
+        self.render(
+            'user/list.html',
+            users=users
+        )
 
 
 class UserHandler(BaseHandler):
 
     def get(self, uid=None):
+        print uid
         if uid:
             uid = safe_objectid_from_str(uid)
             user = fetch_user(self, uid)
@@ -34,8 +48,6 @@ class UserHandler(BaseHandler):
                 USER_ROLE_PARTIAL: u'兼职'
             }
         )
-
-        self.render('user/form.html', user=user)
 
     def post(self, uid=None):
         action = self.get_argument('action')

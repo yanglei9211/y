@@ -8,7 +8,7 @@ import hashlib
 import re
 
 from errors import BLError
-from app_define import USER_ROLE_MANAGER
+from app_define import USER_ROLE_PARTIAL, USER_ROLE_FULL
 
 
 def hash_pwd(pwd, salt):
@@ -49,3 +49,11 @@ def assert_username_legal(username):
 def assert_name_legal(name):
     if not re.match(ur'^[\u4E00-\u9FA5a-zA-Z0-9]{1,20}$', name):
         raise BLError(u'姓名不合法,要求1-20个字符,只包含中文,大小写字母,数字')
+
+
+def get_all_user(handler):
+    users = list(handler.userdb.user.find(
+        {'role': {'$in': [USER_ROLE_FULL, USER_ROLE_PARTIAL]}},
+        sort=[('_id', 1)]
+    ))
+    return users
