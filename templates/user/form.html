@@ -1,60 +1,73 @@
 {% extends "base.html" %}
 {% block css %}
+<style>
+</style>
 {% endblock %}
 {% block body %}
-<div class="panel panel-default" >
->
-    <div class="input-group">
-      <span class="input-group-addon" id="basic-addon1">用户名</span>
-      <input id="name" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
-    </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="basic-addon1">姓名</span>
-      <input id="name" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
-    </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="basic-addon1">密码</span>
-      <input id="name" type="password" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
-    </div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+    <div class="panel panel-default">
+        <div class="panel-heading"></div>
 
-    <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">角色</span>
-        <select id="role" class="form-control">
-            {% for role in roles %}
-                <option value="{{ role }}" {{ 'selected="selected"' if role == user.role else '' }}>
-                    {{ roles[role] }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-    {% if user %}
+
+        <div class="panel-body input-group-body">
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">帐号</span>
+          <input id="username" type="text" class="form-control" {{ 'disabled="disabled"' if user else '' }}
+                 placeholder="Username" aria-describedby="basic-addon1" value="{{ user.username }}">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">姓名</span>
+          <input id="name" type="text" class="form-control" placeholder="Name" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">密码</span>
+          <input id="password" type="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">角色</span>
+            <select id="role" class="form-control" style="width: 300px">
+                {% for role in roles %}
+                    <option value="{{ role }}" {{ 'selected="selected"' if role == user.role else '' }}>
+                        {{ roles[role] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if user %}
+            <div class="form-group">
+                <label class="control-label col-sm-2"></label>
+                <div class="col-sm-10">
+                    {% if user.valid %}
+                        <span class="label label-success">有效</span>
+                    {% else %}
+                        <span class="label label-danger">已禁用</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
         <div class="form-group">
-            <label class="control-label col-sm-2"></label>
+            <div class="col-sm-2"></div>
             <div class="col-sm-10">
-                {% if user.valid %}
-                    <span class="label label-success">有效</span>
+                {% if user %}
+                    <button class="save btn btn-success" {% if not user.valid %}disabled{% endif %}>保存</button>
+                    <button class="delete btn btn-danger">{{ '禁用' if user.valid else '解禁' }}</button>
                 {% else %}
-                    <span class="label label-danger">已禁用</span>
+                    <button class="create btn btn-success">创建</button>
                 {% endif %}
             </div>
         </div>
-    {% endif %}
-    <div class="form-group">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-10">
-            {% if user %}
-                <button class="save btn btn-success" {% if not user.valid %}disabled{% endif %}>保存</button>
-                <button class="delete btn btn-danger">{{ '禁用' if user.valid else '解禁' }}</button>
-            {% else %}
-                <button class="create btn btn-success">创建</button>
-            {% endif %}
         </div>
+    </div>
     </div>
 </div>
 {% endblock %}
 
 {% block js %}
 <script src="{{ static_url('js/sha1.js') }}"></script>
+<script src="{{ static_url('js/y.js') }}"></script>
 <script>
 function hash(str, salt) {
     return CryptoJS.SHA1(str + '|' + salt).toString(CryptoJS.enc.Hex).slice(0, 16);
@@ -95,9 +108,9 @@ function input_validation(data, cb){
 
 function send_data(data){
     url = "";
-    y.gui_post(url, data, function (data) {
+    y.post(url, data, function (data) {
         window.location = "/manager/users";
-    }, [$(this)]);
+    });
 }
 
 function collect_info(){
@@ -123,6 +136,7 @@ $('.save').click(function () {
 
 $('.create').click(function () {
     var data = collect_info();
+    console.log(data);
     data['action'] = 'create';
     input_validation(data, function () {
         send_data(data)

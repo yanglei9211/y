@@ -64,6 +64,7 @@ y.gui_get = function(url, args, callback, ctrls){
 };
 
 y.gui_post = function(url, args, callback, ctrls){
+    args._xsrf = getCookie("_xsrf");
     return y.gui_ajax(url, 'post', args, callback, ctrls);
 };
 

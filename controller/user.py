@@ -5,7 +5,6 @@ import random
 import logging
 
 from tornado.web import HTTPError
-from tornado.options import options
 
 from util.base_handler import BaseHandler
 from util.escape import safe_objectid_from_str
@@ -18,12 +17,14 @@ from errors import BLError
 from app_define import USER_ROLE_FULL, USER_ROLE_PARTIAL
 from app_define import USER_ROLE_TRANS
 
+from debug_func import show_pretty_dict
+
 
 class ListHandler(BaseHandler):
     def get(self):
         users = get_all_user(self)
         for user in users:
-            user['role_str'] = USER_ROLE_TRANS(user['role'])
+            user['role_str'] = USER_ROLE_TRANS[user['role']]
         self.render(
             'user/list.html',
             users=users
@@ -33,7 +34,6 @@ class ListHandler(BaseHandler):
 class UserHandler(BaseHandler):
 
     def get(self, uid=None):
-        print uid
         if uid:
             uid = safe_objectid_from_str(uid)
             user = fetch_user(self, uid)
@@ -53,6 +53,8 @@ class UserHandler(BaseHandler):
         action = self.get_argument('action')
         if uid:
             uid = safe_objectid_from_str(uid)
+        else:
+            raise HTTPError(400, "no user id")
         if action == 'create':
             self.create()
         elif action == 'save':
@@ -65,8 +67,14 @@ class UserHandler(BaseHandler):
 
     def delete(self, uid):
         user = fetch_user(self, uid)
-        user['valid'] = not user['valid']
-        self.userdb.user.update()
+        valid_status = not user['valid']
+        self.userdb.user.update(
+            {'_id': uid},
+            {'$set': {'valid': valid_status}}
+        )
+        logging.info("user id:{}  username:{}  status change into {} by {}".format(
+            user['_id'], user['username'], valid_status, self.m
+        ))
 
     def create(self):
         username = self.get_argument('username')
@@ -74,7 +82,8 @@ class UserHandler(BaseHandler):
         name = self.get_argument('name')
         assert_name_legal(name)
         password = self.get_argument('password')
-        user = create_user(self, 'username', name, password)
+        role = self.get_argument('role', type_=int)
+        user = create_user(self, username, name, password, role)
         try:
             self.userdb.user.insert(user)
         except:
@@ -84,8 +93,10 @@ class UserHandler(BaseHandler):
         name = self.get_argument('name')
         assert_name_legal(name)
         password = self.get_argument('password', '')
+        role = self.get_argument('role', type_=int)
         up_set = {
             'name': name,
+            'role': role,
         }
         if password:
             salt = gen_salt()
