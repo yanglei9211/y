@@ -5,6 +5,7 @@ import random
 import logging
 
 from tornado.web import HTTPError
+from tornado.options import options
 
 from util.base_handler import BaseHandler
 from util.escape import safe_objectid_from_str
@@ -17,8 +18,6 @@ from errors import BLError
 from app_define import USER_ROLE_FULL, USER_ROLE_PARTIAL
 from app_define import USER_ROLE_TRANS
 
-from debug_func import show_pretty_dict
-
 
 class ListHandler(BaseHandler):
     def get(self):
@@ -29,6 +28,26 @@ class ListHandler(BaseHandler):
             'user/list.html',
             users=users
         )
+
+
+class AccountHandler(BaseHandler):
+
+    def get(self):
+        user = self.get_current_user()
+        if user is None:
+            raise HTTPError(404, "no current user")
+        user['role_str'] = USER_ROLE_TRANS[user['role']]
+        self.render(
+            'user/account.html',
+            user=user
+        )
+
+    def post(self):
+        if options.debug:
+            self.write({})
+            return
+        user = self.userdb.user.find_one({'username': self.m})
+
 
 
 class UserHandler(BaseHandler):

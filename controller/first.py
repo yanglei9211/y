@@ -2,7 +2,9 @@
 # encoding: utf-8
 
 from util.base_handler import BaseHandler
-from debug_func import show_time_cost
+from app_define import USER_ROLE_TRANS
+
+from util.decorator import show_time_cost
 
 
 class FirstHandler(BaseHandler):
@@ -21,4 +23,6 @@ class FirstHandler(BaseHandler):
 
 class WelcomeHandler(BaseHandler):
     def get(self):
-        self.render("welcome.html", user=self.current_user)
+        user = self.current_user
+        user['role_str'] = USER_ROLE_TRANS[user['role']]
+        self.render("welcome.html", user=user)
