@@ -159,4 +159,13 @@ class LoginHandler(BaseHandler):
         if referer and referer != self.request.full_url():
             return referer
         else:
-            return "/test/local/file"
+            return "/main"
+
+
+class LogoutHandler(BaseHandler):
+
+    def get(self):
+        self.clear_cookie('user', domain=self.get_main_domain())
+        self.clear_cookie('login_sn', domain=self.get_main_domain())
+        # 跳回等出前的界面
+        self.redirect(self.request.headers.get('Referer', '/'))

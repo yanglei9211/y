@@ -25,11 +25,11 @@
                                     {{ current_user.username }}</a>
                             </li>
                             <li>
-                                <a href="#">Sign out</a>
+                                <a href="{{ handler.get_logout_url() }}">Sign out</a>
                             </li>
                         {% else %}
                             <li>
-                            <a href="#">Sign in</a>
+                            <a href="{{ handler.get_login_url() }}">Sign in</a>
                             </li>
                         {% endif %}
 

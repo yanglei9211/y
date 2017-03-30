@@ -61,6 +61,12 @@ class BaseHandler(RequestHandler):
         else:
             return None
 
+    def get_logout_url(self):
+        return "/user/logout"
+
+    def get_login_url(self):
+        return "/user/login"
+
     @property
     def m(self):
         return self.current_user['username'] if self.current_user else None

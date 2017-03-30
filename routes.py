@@ -24,10 +24,12 @@ def get_routes():
         (r'/api/students', 'controller.test.TestGenList'),
 
         (r'/user/login', 'controller.user.LoginHandler'),
+        (r'/user/logout', 'controller.user.LogoutHandler'),
 
         (r'/manager/user', 'controller.user.UserHandler'),
         (r'/manager/user/(\w+)', 'controller.user.UserHandler'),
         (r'/manager/users', 'controller.user.ListHandler'),
+
 
         (r'/main', 'controller.first.WelcomeHandler'),
 
