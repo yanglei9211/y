@@ -129,7 +129,8 @@ class BaseHandler(RequestHandler):
         return self.request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
     def render(self, template, **kwargs):
-        # todo render common date
+        # TODO render common date
+        # TODO top nav
         return super(BaseHandler, self).render(
             template, **kwargs)
 

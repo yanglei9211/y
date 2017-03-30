@@ -29,5 +29,7 @@ def get_routes():
         (r'/manager/user/(\w+)', 'controller.user.UserHandler'),
         (r'/manager/users', 'controller.user.ListHandler'),
 
+        (r'/main', 'controller.first.WelcomeHandler'),
+
     ]
     return routes

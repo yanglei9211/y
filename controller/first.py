@@ -17,3 +17,8 @@ class FirstHandler(BaseHandler):
         dt = self.get_argument('data')
         print dt
         self.write({'res': dt})
+
+
+class WelcomeHandler(BaseHandler):
+    def get(self):
+        self.render("welcome.html", user=self.current_user)

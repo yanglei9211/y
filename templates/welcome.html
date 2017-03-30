@@ -1,4 +1,13 @@
-{% extends base.html %}
+{% extends "base.html" %}
 {% block body%}
-    
+<div>username: {{ user.username }}</div>
+<div>name: {{ user.name }}</div>
+<div>role: {{ user.role_str }}</div>
+
+<div>
+<div><a href="/manager/users">user list</a></div>
+<div><a href="/test/fileinput">fileinput</a></div>
+<div><a href="/test/oss/file">upload oss</a></div>
+<div><a href="/test/local/file">upload local</a></div>
+</div>
 {% endblock %}
