@@ -18,6 +18,8 @@ from errors import BLError
 from app_define import USER_ROLE_FULL, USER_ROLE_PARTIAL
 from app_define import USER_ROLE_TRANS
 
+# TODO 权限组管理
+
 
 class ListHandler(BaseHandler):
     def get(self):
@@ -47,7 +49,26 @@ class AccountHandler(BaseHandler):
             self.write({})
             return
         user = self.userdb.user.find_one({'username': self.m})
-
+        assert user is not None
+        name = self.get_argument('name')
+        assert_name_legal(name)
+        up_set = {
+            'name': name
+        }
+        current_pwd = self.get_argument('cpwd', '')
+        new_pwd = self.get_argument('npwd', '')
+        if current_pwd or new_pwd:
+            if hash_pwd(current_pwd, user['salt']) != user['password']:
+                raise BLError(u"当前密码错误")
+            salt = gen_salt()
+            password = hash_pwd(new_pwd, salt)
+            up_set['salt'] = salt
+            up_set['password'] = password
+        self.userdb.user.update(
+            {'_id': user['_id']},
+            {'$set': up_set}
+        )
+        self.write({})
 
 
 class UserHandler(BaseHandler):

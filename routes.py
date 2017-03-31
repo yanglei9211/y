@@ -25,6 +25,7 @@ def get_routes():
 
         (r'/user/login', 'controller.user.LoginHandler'),
         (r'/user/logout', 'controller.user.LogoutHandler'),
+        (r'/user/account', 'controller.user.AccountHandler'),
 
         (r'/manager/user', 'controller.user.UserHandler'),
         (r'/manager/user/(\w+)', 'controller.user.UserHandler'),

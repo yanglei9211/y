@@ -3,7 +3,7 @@
 <div class="list-box form-horizontal">
     <div class="form-group">
         <label class="control-label col-sm-4" for="username">Username</label>
-        <div class="col-sm-8">
+        <div class="col-sm-4">
             <input  type="text" class="form-control" disabled="disabled" id="username"
             value="{{ user.username }}"/>
         </div>
@@ -11,7 +11,7 @@
     {% if options.debug %}
         <div class="form-group">
             <label class="control-label col-sm-4" for="name">Name</label>
-            <div class="col-sm-8">
+            <div class="col-sm-4">
                 <input type="text" class="form-control" id="name" disabled="disabled"
                 value="{{ user.name }}">
             </div>
@@ -19,39 +19,39 @@
     {% else %}
         <div class="form-group">
             <label class="control-label col-sm-4" for="name">Name</label>
-            <div class="col-sm-8">
+            <div class="col-sm-4">
                 <input type="text" class="form-control" id="name"
                 value="{{ user.name }}"/>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-4" for="cpwd">Current password</label>
-            <div class="col-sm-8">
+            <div class="col-sm-4">
                 <input type="password" class="form-control" id="cpwd" value=""/>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-4" for="npwd">New password</label>
-            <div class="col-sm-8">
+            <div class="col-sm-4">
                 <input type="password" class="form-control" id="npwd" value=""/>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-4" for="cnpwd">Confirm new password</label>
-            <div class="col-sm-8">
+            <div class="col-sm-4">
                 <input type="password" class="form-control" id="cnpwd" value=""/>
             </div>
         </div>
     {% endif %}
     <div class="form-group">
         <label class="control-label col-sm-4"></label>
-        <div class="col-sm-8">
+        <div class="col-sm-4">
             <span class="label label-success">{{ user.role_str }}</span>
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-4"></div>
-        <div class="col-sm-8">
+        <div class="col-sm-4">
             <button class="save btn btn-success">Save</button>
         </div>
     </div>
@@ -71,7 +71,7 @@ function input_validation(data, cb){
         alert('姓名不合法,要求1-20位,只包含中文,大小写字母,数字和下划线_')
     } else {
         if (data['cpwd'] || data['npwd'] || data['cnpwd']){
-            if (data['npwd'] != data['cnped']){
+            if (data['npwd'] != data['cnpwd']){
                 alert('两次输入的新密码不一致');
                 return
             }
@@ -103,7 +103,7 @@ function collect_info(){
     var name = $('#name').val();
     var cpwd = $('#cpwd').val();
     var npwd = $('#npwd').val();
-    var cnpwd = $('#cnped').val();
+    var cnpwd = $('#cnpwd').val();
     return {
         'username': username,
         'name': name,
