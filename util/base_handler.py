@@ -14,7 +14,7 @@ from util.escape import json_encode, safe_typed_from_str
 from util.common import force_browser_download_content
 from errors import BLError
 
-from app_define import USER_ROLE_MANAGER
+from app_define import USER_ROLE_MANAGER, USER_ROLE_FULL, USER_ROLE_PARTIAL
 
 
 class BaseHandler(RequestHandler):
@@ -32,7 +32,6 @@ class BaseHandler(RequestHandler):
 
     def get_main_domain(self):
         host = self.request.host.split(':')[0]
-        print host
         if ".com" not in self.request.host:
             return host
         else:
@@ -90,6 +89,15 @@ class BaseHandler(RequestHandler):
     @property
     def oss_bucket(self):
         return self.application.settings.get('oss_bucket')
+
+    # 权限管理
+    @property
+    def is_manager(self):
+        return self.current_user['role'] == USER_ROLE_MANAGER if self.current_user else False
+
+    @property
+    def can_handler_user(self):
+        return self.is_manager
 
     def get_argument(self, name, *args, **kwargs):
         type_ = kwargs.pop("type_" ,None)

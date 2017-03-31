@@ -8,6 +8,7 @@ from tornado.web import HTTPError
 from tornado.options import options
 
 from util.base_handler import BaseHandler
+from util.authorization import ManagerHandler
 from util.escape import safe_objectid_from_str
 from bl.user import fetch_user
 from bl.user import create as create_user
@@ -21,7 +22,7 @@ from app_define import USER_ROLE_TRANS
 # TODO 权限组管理
 
 
-class ListHandler(BaseHandler):
+class ListHandler(ManagerHandler):
     def get(self):
         users = get_all_user(self)
         for user in users:
@@ -71,7 +72,7 @@ class AccountHandler(BaseHandler):
         self.write({})
 
 
-class UserHandler(BaseHandler):
+class UserHandler(ManagerHandler):
 
     def get(self, uid=None):
         if uid:
