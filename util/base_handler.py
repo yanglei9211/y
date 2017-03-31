@@ -145,6 +145,25 @@ class BaseHandler(RequestHandler):
     def render(self, template, **kwargs):
         # TODO render common date
         # TODO top nav
+        if self.current_user:
+            navs = [
+                ('/main', 'main', u'home', [])
+            ]
+            if self.can_handler_user:
+                navs.append(
+                    ('/manager/users', 'user', u'users', [])
+                )
+            navs.append(
+                ('/test/fileinput', 'fileinput', u'fileinput', [])
+            )
+            navs.append(
+                ('/test/oss/file', 'upload', u'upload', [
+                    ('/test/oss/file', u'upload oss'),
+                    ('/test/local/file', u'upload local')
+                ])
+            )
+            kwargs['navigation_bar'] = navs
+            print kwargs['navigation_bar']
         return super(BaseHandler, self).render(
             template, **kwargs)
 

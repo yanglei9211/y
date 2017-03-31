@@ -10,11 +10,49 @@
           <a class="navbar-brand" href="/main">sample nav</a>
         </div>
 
+        <div class="collapse navbar-collase" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% for href, id, caption, subs in navigation_bar %}
+                    {% if subs %}
+                        <li role="presentation" class="dropdown {{ 'active' if active_page and id == active_page else '' }}">
+                            <a href="{{ href }}" data-toggle="dropdown" role="button" aria-haspopup="true"
+                            aria-expanded="false">{{ caption }} <span class="carat"></span></a>
+                            <ul class="dropdown-menu">
+                                {% for sub_href, sub_cap in subs %}
+                                    <li><a href="{{ sub_href }}">{{ sub_cap }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
+                    {% else %}
+                        <li role="presentation" {% if active_page and id == active_page %}class=""{% endif %}>
+                            <a href="{{ href }}">{{ caption }}</a>
+                        </li>
+                    {% endif %}
+                    <li role="presentation" {% if active_page and id == active_page %} class="active" {% endif %}>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+
+    {#
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
               <li role="presentation"><a href="#">Home</a></li>
               <li role="presentation" class="active"><a href="#">Profile</a></li>
-              <li role="presentation"><a href="#">Messages</a></li>
+              <li class="dropdown" role="presentation">
+                  <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">Messages <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="#">a</a></li>
+                      <li><a href="#">b</a></li>
+                      <li><a href="#">c</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">d</a></li>
+                  </ul>
+              </li>
             </ul>
             <div class="nav navbar-nav navbar-right">
                 <ul class="nav navbar-nav">
@@ -37,5 +75,6 @@
                 </ul>
             </div>
         </div>
+     #}
     </div>
 </nav>

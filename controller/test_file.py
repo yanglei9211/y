@@ -11,7 +11,7 @@ from util.base_handler import BaseHandler, BaseDownloadHandler
 from util import data_file, file_util
 from bl import test_file as tf_bl
 from errors import BLError
-
+from tornado.gen import coroutine
 
 class TestFileHandler(BaseHandler):
     """
