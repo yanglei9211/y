@@ -10,9 +10,11 @@ from util.decorator import show_time_cost
 class FirstHandler(BaseHandler):
     @show_time_cost
     def get(self):
+        name = self.get_argument('name', '')
+        print name
         self.render(
             'first.html',
-            name="123"
+            name=name
         )
 
     def post(self):
