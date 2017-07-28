@@ -10,8 +10,6 @@ from tornado.options import options
 from util import file_util
 from util import data_file
 
-from debug_func import show_pretty_dict
-
 
 def set_file_path(handler, files):
 
@@ -44,7 +42,6 @@ def unzip_img_files(handler, file_body):
         img_list.append(d)
 
     img_list.sort(key=lambda x: (x['q_num'], x['img_num']))
-    show_pretty_dict(img_list)
     print "#" * 23
     questions = []
     block = []
@@ -57,7 +54,6 @@ def unzip_img_files(handler, file_body):
     if block:
         questions.append(block)
 
-    show_pretty_dict(questions)
     return questions
 
 
