@@ -4,6 +4,7 @@
 import time
 import logging
 import os
+import oss2
 
 from tornado.options import options, parse_command_line, parse_config_file
 from pymongo import MongoClient
@@ -20,21 +21,20 @@ class Scaffold(object):
         settings.define_app_options()
         parse_command_line(final=False)
         current_dir = os.path.dirname(os.path.abspath(__file__))
+        current_dir = os.path.join(current_dir, '..')
         logging.info('Running in %s mode' % ('debug' if options.debug else 'production'))
-        print '#' * 23
-        print options.debug
-
         if options.debug:
             conf_file_path = os.path.join(current_dir, 'server.conf')
         else:
             conf_file_path = os.path.join(current_dir, 'prod.conf')
-
+        print conf_file_path
         if os.path.exists(conf_file_path):
             parse_config_file(conf_file_path, final=False)
 
         parse_command_line(final=True)
         self.db = self.setup_db()
         self.userdb = self.setup_userdb()
+        self.oss_bucket = self.setup_oss_bucket()
 
     def setup_db(self):
         db_name = options.mongodb_name
@@ -60,3 +60,8 @@ class Scaffold(object):
     def main(self, *args, **kwargs):
         # overwrite
         assert False
+
+    def setup_oss_bucket(self):
+        auth = oss2.Auth(options.oss_access_id, options.oss_access_key)
+        bucket = oss2.Bucket(auth, options.oss_endpoint, options.oss_name)
+        return bucket

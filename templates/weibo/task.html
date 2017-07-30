@@ -1,0 +1,92 @@
+{% extends "base.html"%}
+
+{% block css %}
+{% endblock %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row" style="margin-bottom: 8px">
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="wb_url" autocomplete="off" placeholder="微博链接"/>
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary" id="btn_url">抓取</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="wb_rid" autocomplete="off" placeholder="rid"/>
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary" id="btn_rid">抓取</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">任务列表</div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th width="25%">任务</th>
+                    <th width="15%">类型</th>
+                    <th width="15%">创建时间</th>
+                    <th width="15%">完成时间</th>
+                    <th width="15%">状态</th>
+                    <th width="15%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task['data'] }}</td>
+                        <td>{{ task['type'] }}</td>
+                        <td>{{ datetime.fromtimestamp(task['ctime']).strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td>{{ datetime.fromtimestamp(task['mtime']).strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td>
+                            {% if task['status'] == 0 %}
+                            <label class="label label-primary">新建</label>
+                            {% elif task['status'] == 1 %}
+                            <label class="label label-warning">处理中</label>
+                            {% elif task['status'] == 2 %}
+                            <label class="label label-success">完成</label>
+                            {% elif task['status'] == -1 %}
+                            <label class="label label-danger">失败</label>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if task['status'] == 2 %}
+                                <a href="{{ oss_pre }}/{{ task['file_name'] }}" download="{{ task['file_name'] }}">下载</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+    $('#btn_url').click(function () {
+        wb_url = $('#wb_url').val();
+        y.post("", {"action": "url", "wb_url": wb_url}, function (data) {
+            alert(data['data'])
+        })
+    });
+
+    $('#btn_rid').click(function () {
+        wb_rid = $('#wb_rid').val();
+        y.post("", {"action": "rid", "wb_rid": wb_rid}, function (data) {
+            alert(data['data'])
+        })
+    });
+
+    </script>
+{% endblock %}

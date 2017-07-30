@@ -18,7 +18,7 @@ def save_oss(bucket, prefix, content, ext=""):
     try:
         filename = filename.lower()
         bucket.put_object(filename, content)
-        print "ok"
+        print "save ok"
     except OssError as e:
         print "fail"
         logging.error("save_oss put_object except with: %s" % str(e))

@@ -55,7 +55,7 @@ class YWeb(object):
             'template_loader': loader,
             'debug': options.debug,
             'cookie_secret': options.cookie_secret,
-            'xsrf_cookies': True,
+            # 'xsrf_cookies': True,
             'db': self.setup_db_client(),
             'asy_db': self.setup_asy_db_client(),
             'userdb': self.setup_user_db(),

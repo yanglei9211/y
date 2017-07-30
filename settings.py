@@ -13,7 +13,7 @@ def define_app_options():
 
     define('mongodb_host', default='127.0.0.1')
     define('mongodb_port', default=27017)
-    define('mongodb_name', default="test")
+    define('mongodb_name', default="weibo_task")
 
     define('userdb_host', default='127.0.0.1')
     define('userdb_port', default=27017)

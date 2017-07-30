@@ -33,6 +33,6 @@ def get_routes():
 
 
         (r'/main', 'controller.first.WelcomeHandler'),
-
+        (r'/weibo', 'controller.weibo.WeiboHandler'),
     ]
     return routes
