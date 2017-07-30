@@ -76,17 +76,21 @@
     <script type="text/javascript">
     $('#btn_url').click(function () {
         wb_url = $('#wb_url').val();
-        y.post("", {"action": "url", "wb_url": wb_url}, function (data) {
-            alert(data['data'])
+        y.post("", {"action": "url", "wb_url": wb_url}, function () {
+            window.location.reload()
         })
     });
 
     $('#btn_rid').click(function () {
         wb_rid = $('#wb_rid').val();
-        y.post("", {"action": "rid", "wb_rid": wb_rid}, function (data) {
-            alert(data['data'])
+        y.post("", {"action": "rid", "wb_rid": wb_rid}, function () {
+            window.location.reload()
         })
     });
 
     </script>
 {% endblock %}
+
+[program:y]
+command=python /home/yanglei/y/webapp.py --debug=False --port=8080
+user=yanglei

@@ -10,7 +10,7 @@ from util.escape import safe_objectid_from_str
 from bl.weibo import create_task
 
 
-class WeiboHandler(BaseHandler):
+class WeiboHandler(ManagerHandler):
     def get(self):
         tasks = list(self.db.task.find({}, sort=[('_id', -1)]))
 

@@ -200,7 +200,7 @@ class LoginHandler(BaseHandler):
         if referer and referer != self.request.full_url():
             return referer
         else:
-            return "/main"
+            return "/weibo"
 
 
 class LogoutHandler(BaseHandler):

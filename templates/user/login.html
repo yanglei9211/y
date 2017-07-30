@@ -2,25 +2,29 @@
 {% block css %}
 {% endblock %}
 {% block body %}
-    <h1>login</h1>
-    <div class="container">
-        <div class="inner" id="login-wrap">
-            <div>
-                <input type="text" id="username" placeholder="用户名" autocomplete="off">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+             <div class="row" style="margin-bottom: 8px">
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="username" autocomplete="off" placeholder="用户名"/>
+                </div>
             </div>
-            <div>
-                <input type="password" id="password" placeholder="密码" autocomplete="off">
+
+            <div class="row">
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" id="password" autocomplete="off" placeholder="密码"/>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-primary" id="login">登录</button>
+                </div>
             </div>
-            <div>
-                <label>
-                    <input type="checkbox" name="checkbox" id="lasting" checked>记住我
-                </label>
-            </div>
-            <div>
-                <button class="btn btn-primary" id="login">登录</button>
-            </div>
+
+
+
         </div>
     </div>
+
 {% endblock %}
 {% block js %}
 <script src="{{ static_url('js/sha1.js') }}"></script>
