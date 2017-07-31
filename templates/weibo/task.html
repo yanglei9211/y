@@ -69,6 +69,23 @@
             </table>
         </div>
     </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+                <a href="?page_idx={{ page.page - 1 if page.page else 0 }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for idx in range(page.pagecount) %}
+                <li><a href="?page_idx={{ idx }}">{{ idx + 1 }}</a></li>
+            {% endfor %}
+            <li>
+                <a href="?page_idx={{ page.page + 1 if page.page < page.pagecount - 1 else page.page}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
 {% endblock %}
 
@@ -90,7 +107,3 @@
 
     </script>
 {% endblock %}
-
-[program:y]
-command=python /home/yanglei/y/webapp.py --debug=False --port=8080
-user=yanglei
