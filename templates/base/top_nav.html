@@ -7,10 +7,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/main">sample nav</a>
+          <a class="navbar-brand" href="/main">Main</a>
         </div>
 
-        <div class="collapse navbar-collase" id="bs-example-navbar-collapse-1">
+        <div class="collapse in navbar-collase" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 {% for href, id, caption, subs in navigation_bar %}
                     {% if subs %}
@@ -33,6 +33,12 @@
                     </li>
                 {% endfor %}
             </ul>
+            <div class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav">
+                    <li><a href="www.baidu.com"><i class="glyphicon glyphicon-user"></i> &nbsp; com</a></li>
+                    <li><a href="/user/logout">sign out</a></li>
+                </ul>
+            </div>
         </div>
 
 

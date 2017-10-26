@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import re
+import logging
 import time
 import signal
 
@@ -96,3 +97,93 @@ def force_browser_download_content(handler, fname):
         handler.set_header('Content-Disposition',
                            'attachment;filename="{}";filename*=UTF-8\'\'{}'.format(
                                fname.encode('utf-8'), escaped_fname))
+
+
+class TextWriter(object):
+    def __init__(self, **kwargs):
+        self.method = kwargs.get("method", "cmd")       # cmd, file, logging
+        self.with_linenum = kwargs.get("with_linenum", False)
+        self.file_name = kwargs.get("file_name", "new_file.txt")
+        self.caches = []
+
+    def set_method(self, s):
+        self.method = s
+
+    def set_linenum(self, f):
+        self.with_linenum = f
+
+    def set_file_name(self, f):
+        self.file_name = f
+
+    def write(self, s):
+        idx = len(self.caches) - 1
+        if idx < 0:
+            idx += 1
+            self.caches.append("")
+        self.caches[idx] += s
+
+    def writeln(self, s):
+        self.caches.append(s)
+
+    def write_pretty(self, s):
+        def _combined(val):
+            """
+            判断val是不是dict或者list
+            :param val:
+            :return: none
+            """
+            if isinstance(val, list) or isinstance(val, dict) or isinstance(val, tuple):
+                return True
+            return False
+
+        def _write_pretty(val, write_caches, deep=0):
+            """
+            格式化输出，用来调试
+            :param show_mode:
+            :param val:
+            :param deep:
+            :return: None
+            """
+            if isinstance(val, dict):
+                for r in val:
+                    if _combined(val[r]):
+                        write_caches.append(u"%s%s:" % ('\t' * deep, r))
+                        _write_pretty(val[r], write_caches, deep + 1)
+                    else:
+                        write_caches.append(u"%s%s:%s" % ("\t" * deep, r, val[r]))
+
+            elif isinstance(val, list) or isinstance(val, tuple):
+                for i, r in enumerate(val):
+                    if _combined(val[i]):
+                        write_caches.append(u"%s%d:" % ("\t" * deep, i))
+                        _write_pretty(val[i], write_caches, deep + 1)
+                    else:
+                        write_caches.append(u"%s%d:%s" % ("\t" * deep, i, val[i]))
+            else:
+                write_caches.append(u"%s:%s" % ("\t" * deep, val))
+
+        _caches = []
+        _write_pretty(s, _caches)
+        self.caches.extend(_caches)
+
+    def clear(self):
+        self.caches = []
+
+    def commit(self):
+        if self.method == "file":
+            with open(self.file_name, "w") as f:
+                for out_str in self._datas():
+                    f.write("%s\n" % out_str)
+        else:
+            for out_str in self._datas():
+                if self.method == "cmd":
+                    print out_str
+                elif self.method == "logging":
+                    logging.info(out_str)
+
+    def _datas(self):
+        for i, s in enumerate(self.caches):
+            if self.with_linenum:
+                yield u"%d\t|\t%s" % (i+1, s)
+            else:
+                yield u"%s" % s

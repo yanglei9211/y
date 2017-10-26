@@ -25,7 +25,7 @@
     <!-- 在html中，你还是需要写（下面三行）
      （在tornado的源代码中，执行xsrf_form_html()
      会调用set_cookie('_xsrf')），这样在cookie中就会有_xsrf值了，
-     用上面说得方法带上去就行了。>
+     用上面说得方法带上去就行了。-->
     {% autoescape false %}
     {{ xsrf_form_html() }}
     {% endautoescape %}

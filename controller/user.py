@@ -179,7 +179,6 @@ class LoginHandler(BaseHandler):
             'username': username,
             'login_sn': gen_salt(),
         }
-        print self.get_main_domain()
         self.set_secure_cookie(
             'user',
             self.dumps(cookie_user),
@@ -191,7 +190,6 @@ class LoginHandler(BaseHandler):
             cookie_user['login_sn'],
             domain=self.get_main_domain(),
         )
-
         self.write({'url': self.get_next_url()})
 
     def get_next_url(self):
