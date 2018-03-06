@@ -90,6 +90,10 @@ class BaseHandler(RequestHandler):
     def oss_bucket(self):
         return self.application.settings.get('oss_bucket')
 
+    @property
+    def index(self):
+        return self.application.settings.get('index')
+
     # 权限管理
     @property
     def is_manager(self):

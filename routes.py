@@ -9,6 +9,8 @@ def get_routes():
         (r'/user/logout', 'controller.user.LogoutHandler'),
 
         (r'/weibo', 'controller.weibo.WeiboHandler'),
-        (r'/', 'controller.weibo.WeiboHandler')
+        (r'/', 'controller.weibo.WeiboHandler'),
+
+        (r'/ccc', 'controller.ccc.CHandler'),
     ]
     return routes

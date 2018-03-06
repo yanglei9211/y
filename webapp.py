@@ -19,6 +19,7 @@ import settings
 from util.template import JinjaLoader
 from util.common import install_tornado_shutdown_handler
 from util.request_handlers import SmartStaticFileHandler, MultiFileFindler
+from util.simhash_index import SimIndex
 from routes import get_routes
 
 reload(sys)
@@ -56,6 +57,7 @@ class YWeb(object):
             'debug': options.debug,
             'cookie_secret': options.cookie_secret,
             # 'xsrf_cookies': True,
+            'index': self.setup_sim_index(),
             'db': self.setup_db_client(),
             'asy_db': self.setup_asy_db_client(),
             'userdb': self.setup_user_db(),
@@ -95,6 +97,9 @@ class YWeb(object):
         logging.info('Connected to userdb: %s --- %s: %d' %
                      (options.userdb_name, options.userdb_host, options.userdb_port))
         return userdb
+
+    def setup_sim_index(self):
+        return SimIndex()
 
     def setup_oss_bucket(self):
         auth = oss2.Auth(options.oss_access_id, options.oss_access_key)
