@@ -27,14 +27,14 @@ def im_add(a, b):
 
 @coroutine
 def test_motor_find(handler):
-    res = yield handler.asy_db.text_info.find().to_list(length=1000000)
-    res = [t['t_id'] for t in res]
+    res = yield handler.asy_db.raws2.find({'text_id': {'$gt': 1235152}}).to_list(100)
+    # res = list(res)
     raise Return(res)
 
 
 def test_mongo_find(handler):
-    res = handler.db.text_info.find()
-    res = [t['t_id'] for t in res]
+    res = handler.db.raws2.find({'text_id': {'$gt': 12358585}}).limit(100)
+    res = list(res)
     return res
 
 

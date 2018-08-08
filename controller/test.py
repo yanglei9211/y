@@ -10,6 +10,8 @@ from bl.test import test_motor_find, test_mongo_find
 from bl.test import get_simhash, asy_get_simhash
 from util.escape import safe_typed_from_str
 
+import time
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -17,6 +19,10 @@ sys.setdefaultencoding('utf-8')
 class TestHandler(BaseHandler):
     @coroutine
     def get(self):
+        e = time.localtime(time.time())
+        dt = time.strftime("%Y-%m-%d %H:%M:%S", e)
+        print '-' * 23
+        print dt
         a = safe_typed_from_str(self.get_argument('a'), int)
         b = safe_typed_from_str(self.get_argument('b'), int)
         res = yield asy_add(self, a, b)
@@ -26,6 +32,10 @@ class TestHandler(BaseHandler):
 class TestNormalHandler(BaseHandler):
 
     def get(self):
+        e = time.localtime(time.time())
+        dt = time.strftime("%Y-%m-%d %H:%M:%S", e)
+        print '-' * 23
+        print dt
         a = safe_typed_from_str(self.get_argument('a'), int)
         b = safe_typed_from_str(self.get_argument('b'), int)
         res = add(a, b)
@@ -43,12 +53,20 @@ class TestImHandler(BaseHandler):
 class TestMotorHandler(BaseHandler):
     @coroutine
     def get(self):
+        e = time.localtime(time.time())
+        dt = time.strftime("%Y-%m-%d %H:%M:%S", e)
+        print '-' * 23
+        print dt
         res = yield test_motor_find(self)
         self.write({'data': res})
 
 
 class TestMongoHandler(BaseHandler):
     def get(self):
+        e = time.localtime(time.time())
+        dt = time.strftime("%Y-%m-%d %H:%M:%S", e)
+        print '-' * 23
+        print dt
         res = test_mongo_find(self)
         self.write({'data': res})
 
